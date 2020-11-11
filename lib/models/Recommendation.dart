@@ -18,6 +18,7 @@ class Recommendation {
     if (json['recommendations'] != null) {
       for (var recommendation in json['recommendations']) {
         switch (recommendation['contentType']) {
+          case 'PPV':
           case 'PROGRAM':
 
             var showJson = recommendation;

@@ -7,9 +7,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
+import 'package:tv_app/models/Recommendation.dart';
+import 'package:tv_app/repository/recommendation_repository.dart';
+import 'package:tv_app/services/repository_service.dart';
 import 'package:tv_app/widgets/tv_infinity_scroll.dart';
 
 enum Widgets{
@@ -65,24 +66,28 @@ class HomeStatus {
 
 class HomeController extends GetxController {
   final TVInfiniteScrollController _menuListController = TVInfiniteScrollController();
-  TVInfiniteScrollController _recoLIstController = TVInfiniteScrollController();
+  TVInfiniteScrollController _recoListController = TVInfiniteScrollController();
   TVInfiniteScrollController _focusedListController;
+
+  final RepositoryService _repositoryService = Get.find<RepositoryService>();
   final HomeStatus homeStatus = HomeStatus.init();
   bool _isScrolling = false;
+  String _recoCategory;
   var items = [];
   int _cnt = 0;
 
 
   TVInfiniteScrollController get menuController => _menuListController;
-  TVInfiniteScrollController get recoController => _recoLIstController;
+  TVInfiniteScrollController get recoController => _recoListController;
 
   void handleKeyEvent(RawKeyEvent event) {
     // debugPrint('handleKeyEvent $event');
     if (_focusedListController == null) {
       _menuListController.setName('menu');
-      _recoLIstController.setName('reco');
+      _recoListController.setName('reco');
       _focusedListController = _menuListController;
     }
+
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
         _focusedListController.prevItem();
@@ -94,11 +99,11 @@ class HomeController extends GetxController {
 
     if (event is RawKeyUpEvent) {
       if (_isScrolling == false && event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        if (homeStatus.menu.inFocus && items.length > 0) {
+        if (homeStatus.menu.inFocus && homeStatus.recommendations.data.length > 0) {
           homeStatus.menu.inFocus = false;
           homeStatus.recommendations.inFocus = true;
           homeStatus.details.widgetStatus = Status.visible;
-          _focusedListController = _recoLIstController;
+          _focusedListController = _recoListController;
           update([homeStatus.menu.id, homeStatus.recommendations.id, homeStatus.details.id]);
         }
       }
@@ -138,57 +143,55 @@ class HomeController extends GetxController {
 
   Future onMenuSelect(String recommendations) async {
     debugPrint('onMenuSelect 1');
-    String url;
-    String method = 'get';
-    String payload = '';
-    Response httpResponse;
-    items = [];
-    _recoLIstController = null;
+    _recoListController = null;
+    await _getRecommendations(recommendations);
+    _recoListController = TVInfiniteScrollController();
+    homeStatus.recommendations.widgetStatus = Status.visible;
+    update([homeStatus.recommendations.id]);
+  }
 
-    switch (recommendations) {
-      case 'all':
-        url = 'https://player.maxtvtogo.tportal.hr:8086/OTT4Proxy/proxy/recommendation/user/all';
-        break;
-      case 'epg':
-        url = 'https://player.maxtvtogo.tportal.hr:8086/OTT4Proxy/proxy/recommendation/epg';
-        break;
-      case 'npvr':
-        url = 'https://player.maxtvtogo.tportal.hr:8086/OTT4Proxy/proxy/recommendation/npvr';
-        break;
-      case 'vod':
-        method = 'post';
-        payload = '{"categoryList": ["0"]}';
-        url = 'https://player.maxtvtogo.tportal.hr:8086/OTT4Proxy/proxy/recommendation/vod';
-        break;
-      case 'svod':
-        method = 'post';
-        payload = '{"categoryList": ["0"]}';
-        url = 'https://player.maxtvtogo.tportal.hr:8086/OTT4Proxy/proxy/recommendation/svod';
-        break;
-      case 'ppv':
-        url = 'https://player.maxtvtogo.tportal.hr:8086/OTT4Proxy/proxy/recommendation/ppv';
-        break;
+  Future<void> _getRecommendations(String recoCategory) async {
+    RecommendationRepository _recoRepository = _repositoryService.getRecommendation();
+    List<Recommendation> _recommendations;
+
+    if (_recoCategory != recoCategory) {
+      _recoCategory = recoCategory;
+      switch (recoCategory) {
+        case 'all':
+          _recommendations = await _recoRepository.userAll();
+          break;
+        case 'epg':
+          _recommendations = await _recoRepository.epg();
+          break;
+        case 'vod':
+          _recommendations = await _recoRepository.vodCategories(['0']);
+          break;
+        case 'svod':
+          _recommendations = await _recoRepository.svodCategories(['0']);
+          break;
+        case 'npvr':
+          _recommendations = await _recoRepository.npvr();
+          break;
+        case 'ppv':
+          _recommendations = await _recoRepository.ppv();
+          break;
+        default:
+          _recommendations = null;
+          break;
+      }
     }
 
-    if (url != null) {
-      if (method == 'get') {
-        httpResponse = await http.get(url);
-      }
-      if (method == 'post') {
-        httpResponse = await http.post(url,
-            headers: {"Content-Type": "application/json"},
-            body: payload
-        );
-      }
-
-      _recoLIstController = TVInfiniteScrollController();
-      homeStatus.recommendations.widgetStatus = Status.visible;
-      String body = utf8.decode(httpResponse.bodyBytes);
-      var decoded = jsonDecode(body);
-
-      items = decoded["list"][0]["recommendations"];
-      homeStatus.details.data = items[0];
-      update([homeStatus.recommendations.id]);
+    if (_recommendations != null && _recommendations.isNotEmpty) {
+      homeStatus.recommendations.data = _recommendations[0].recommendations;
+    } else {
+      homeStatus.recommendations.data = [];
     }
+
+    if (homeStatus.recommendations.data != null && homeStatus.recommendations.data.isNotEmpty) {
+      homeStatus.details.data = homeStatus.recommendations.data.first;
+    } else {
+      homeStatus.details.data = null;
+    }
+
   }
 }

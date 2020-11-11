@@ -3,10 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tv_app/pages/home/home.dart';
 import 'package:tv_app/pages/player/player.dart';
+import 'package:tv_app/services/repository_service.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  initServices();
+  runApp(TVApp());
+}
+void initServices() {
+  Get.put(RepositoryService());
+}
 
-class MyApp extends StatelessWidget {
+class TVApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
-/*
-import 'package:tv_test/repository/epg_repository.dart';
-import 'package:tv_test/repository/recommendation_repository.dart';
-import 'package:tv_test/repository/svod_repository.dart';
+import 'package:tv_app/repository/epg_repository.dart';
+import 'package:tv_app/repository/recommendation_repository.dart';
+import 'package:tv_app/repository/vod_repository.dart';
+import 'package:tv_app/repository/svod_repository.dart';
 
 import 'package:get/get.dart';
 
@@ -40,4 +40,4 @@ class RepositoryService extends GetxService {
     return _svod;
   }
 
-}*/
+}
