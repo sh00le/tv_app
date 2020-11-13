@@ -1,7 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
+
+class PlayerApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Player Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        body: Player(),
+      ),
+    );
+  }
+
+}
 
 class Player extends StatefulWidget {
   Player({Key key}) : super(key: key);

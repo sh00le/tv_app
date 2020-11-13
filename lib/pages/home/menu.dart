@@ -36,7 +36,7 @@ class HomeMenu extends StatelessWidget {
                   return MenuListItem(item: _menu[index], selected: _isSelected);
                 },
                 onItemSelected: (selectedIndex) {
-                  _homeController.onMenuSelect(_menu[selectedIndex].recommendation);
+                  _homeController.onMenuSelect(_menu[selectedIndex]);
                 },
                 onScrollStart: () {
                   SchedulerBinding.instance.addPostFrameCallback((_) {

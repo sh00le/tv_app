@@ -76,7 +76,7 @@ class Show {
         );
     }
 
-    Image variation(String variation, String type) {
+    Image imageVariation(String variation, String type) {
         Image outImage;
         if (this.images != null) {
             String _key = Image.generateKey(variation, type);

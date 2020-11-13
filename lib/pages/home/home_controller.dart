@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
@@ -8,7 +5,15 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tv_app/models/Menu.dart';
 import 'package:tv_app/models/Recommendation.dart';
+import 'package:tv_app/models/Show.dart';
+import 'package:tv_app/models/SvodEpisode.dart';
+import 'package:tv_app/models/SvodMovie.dart';
+import 'package:tv_app/models/SvodSerial.dart';
+import 'package:tv_app/models/VodEpisode.dart';
+import 'package:tv_app/models/VodMovie.dart';
+import 'package:tv_app/models/VodSerial.dart';
 import 'package:tv_app/repository/recommendation_repository.dart';
 import 'package:tv_app/services/repository_service.dart';
 import 'package:tv_app/widgets/tv_infinity_scroll.dart';
@@ -73,6 +78,8 @@ class HomeController extends GetxController {
   final HomeStatus homeStatus = HomeStatus.init();
   bool _isScrolling = false;
   String _recoCategory;
+  Menu _selectedMenuItem;
+
   var items = [];
   int _cnt = 0;
 
@@ -81,7 +88,7 @@ class HomeController extends GetxController {
   TVInfiniteScrollController get recoController => _recoListController;
 
   void handleKeyEvent(RawKeyEvent event) {
-    // debugPrint('handleKeyEvent $event');
+    // debugPrint('handleKeyEvent ${event.logicalKey}');
     if (_focusedListController == null) {
       _menuListController.setName('menu');
       _recoListController.setName('reco');
@@ -98,6 +105,26 @@ class HomeController extends GetxController {
     }
 
     if (event is RawKeyUpEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+        debugPrint('SELECT BUTTON');
+        if (homeStatus.details.data is VodMovie) {
+          debugPrint('VodMovie');
+        } else if (homeStatus.details.data is VodSerial) {
+          debugPrint('VodSerial');
+        } else if (homeStatus.details.data is VodEpisode) {
+          debugPrint('VodEpisode');
+        } else if (homeStatus.details.data is SvodMovie) {
+          debugPrint('SVODMovie');
+        } else if (homeStatus.details.data is SvodSerial) {
+          debugPrint('SVODSerial');
+        } else if (homeStatus.details.data is SvodEpisode) {
+          debugPrint('SVODEpisode');
+        } else if (homeStatus.details.data is Show) {
+          Get.toNamed('/epg/show', arguments: homeStatus.details.data.showId);
+        }
+        // Get.toNamed('/test');
+      }
+
       if (_isScrolling == false && event.logicalKey == LogicalKeyboardKey.arrowUp) {
         if (homeStatus.menu.inFocus && homeStatus.recommendations.data.length > 0) {
           homeStatus.menu.inFocus = false;
@@ -141,22 +168,21 @@ class HomeController extends GetxController {
     update([homeStatus.recommendations.id]);
   }
 
-  Future onMenuSelect(String recommendations) async {
-    debugPrint('onMenuSelect 1');
+  Future onMenuSelect(Menu menuItem) async {
     _recoListController = null;
-    await _getRecommendations(recommendations);
+    await _getRecommendations(menuItem);
     _recoListController = TVInfiniteScrollController();
     homeStatus.recommendations.widgetStatus = Status.visible;
     update([homeStatus.recommendations.id]);
   }
 
-  Future<void> _getRecommendations(String recoCategory) async {
+  Future<void> _getRecommendations(Menu menuItem) async {
     RecommendationRepository _recoRepository = _repositoryService.getRecommendation();
     List<Recommendation> _recommendations;
 
-    if (_recoCategory != recoCategory) {
-      _recoCategory = recoCategory;
-      switch (recoCategory) {
+    if (_selectedMenuItem != menuItem) {
+      _selectedMenuItem = menuItem;
+      switch (menuItem.recommendation) {
         case 'all':
           _recommendations = await _recoRepository.userAll();
           break;
