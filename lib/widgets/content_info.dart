@@ -28,82 +28,138 @@ class VodInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-        children:<Widget>[
-          Container(
-              width: 464,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    vodContent.title,
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 23
-                    ),
-                  ),
-                  Text(
-                    '1h 36min | ${vodContent.year} | ${vodContent.genre}',
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    style: TextStyle(
-                        color: Colors.white60,
-                        fontSize: 13
-                    ),
-                  ),
-                  SizedBox(
-                      height: 20
-                  ),
-                  Text(
-                    '${vodContent.description}',
-                    textAlign: TextAlign.left,
-                    maxLines: 5,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    ),
-                  )
-                ],
-              )
-          ),
-          SizedBox(
-              width: 20
-          ),
-          Container(
-            width: 358,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:<Widget>[
-                  SizedBox(
-                      height: 60
-                  ),
-                  Text(
-                    'Director: ${vodContent.director}',
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    ),
-                  ),
-                  Text(
-                    'Actors: ${vodContent.actors}',
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    ),
-                  )
-                ]
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    return Container(
+        height: 240,
+        width: 960,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Spacer top
+            Container(
+              height: 0,
+              width: 960,
             ),
-          ),
-        ]
+            Row(
+              children: [
+                // Spacer - left
+                Container(
+                  width: 180,
+                  height: 162,
+                ),
+                // Basic Content info
+                Container(
+                    width: 480,
+                    height: 162,
+                    child: Column(
+                      children: [
+                        // Content Title
+                        Container(
+                          alignment: Alignment.topLeft,
+                          height: 28,
+                          child: Text(vodContent.title, style: textTheme.headline1,  textAlign: TextAlign.left,),
+                        ),
+                        // Content meta data
+                        Container(
+                          height: 28,
+                          child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                vodContent.duration != null ? Text('${vodContent.duration.toString()} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,) : Container(),
+                                vodContent.year != null ? Text('${vodContent.year.toString()} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,) : Container(),
+                                vodContent.genre != null ? Text('${vodContent.genre.toString()}', style: textTheme.subtitle1, textAlign: TextAlign.start,) : Container(),
+                              ]
+                          ),
+                        ),
+                        // Content description
+                        Container(
+                          child: Text(
+                            vodContent.description,
+                            style: textTheme.bodyText1,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )
+                      ],
+                    )
+                ),
+                // Spacer between content in middle
+                Container(
+                  width: 60,
+                ),
+                // Director, Actors
+                Container(
+                    height: 162,
+                    width: 190,
+                    child: Column(
+                      children: [
+                        // Year
+                        vodContent.year != null ? Container(
+                          alignment: Alignment.bottomLeft,
+                          height: 72,
+                          child: IntrinsicHeight(
+                            child: Row(
+                                children: [
+                                  Text('Year: ', style: textTheme.headline3, textAlign: TextAlign.left,),
+                                  Expanded (
+                                    child: Text(vodContent.year, style: textTheme.bodyText2, textAlign: TextAlign.left,),
+                                  ),
+                                ]
+                            ),
+                          ),
+                        ) : Container(),
+                        // Director
+                        vodContent.director != null ? IntrinsicHeight(
+                          child: Row(
+                              children: [
+                                Text('Director: ',
+                                    textAlign: TextAlign.left, style: textTheme.headline3),
+                                Expanded (
+                                  child: Text(vodContent.director,
+                                    textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                ),
+                              ]
+                          ),
+                        ) : Container(),
+                        // Actors
+                        vodContent.actors != null ? IntrinsicHeight(
+                          child: Row(
+                              children: [
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text('Actors: ',
+                                      textAlign: TextAlign.left, style: textTheme.headline3),
+                                ),
+                                Expanded (
+                                  child: Text(vodContent.actors,
+                                    textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                ),
+                              ]
+                          ),
+                        ) : Container(),
+                        // Genre
+                        vodContent.genre != null ? IntrinsicHeight(
+                          child: Row(
+                              children: [
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text('Genre: ',
+                                    textAlign: TextAlign.start, style: textTheme.headline3,),
+                                ),
+                                Expanded (
+                                  child: Text(vodContent.genre,
+                                    textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                ),
+                              ]
+                          ),
+                        ) : Container(),
+                      ],
+                    )
+                ),
+              ],
+            )
+          ],
+        ),
     );
   }
 }
@@ -114,82 +170,138 @@ class VodSerialInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-        children:<Widget>[
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    return Container(
+      height: 240,
+      width: 960,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Spacer top
           Container(
-              width: 464,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    vodSerial.title,
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 23
-                    ),
-                  ),
-                  Text(
-                    '1h 36min | ${vodSerial.year} | ${vodSerial.genre}',
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    style: TextStyle(
-                        color: Colors.white60,
-                        fontSize: 13
-                    ),
-                  ),
-                  SizedBox(
-                      height: 20
-                  ),
-                  Text(
-                    '${vodSerial.description}',
-                    textAlign: TextAlign.left,
-                    maxLines: 5,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    ),
+            height: 0,
+            width: 960,
+          ),
+          Row(
+            children: [
+              // Spacer - left
+              Container(
+                width: 180,
+                height: 162,
+              ),
+              // Basic Content info
+              Container(
+                  width: 480,
+                  height: 162,
+                  child: Column(
+                    children: [
+                      // Content Title
+                      Container(
+                        alignment: Alignment.topLeft,
+                        height: 28,
+                        child: Text(vodSerial.title, style: textTheme.headline1,  textAlign: TextAlign.left,),
+                      ),
+                      // Content meta data
+                      Container(
+                        height: 28,
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // vodSerial.duration != null ? Text('${vodSerial.duration.toString()} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,) : Container(),
+                              vodSerial.year != null ? Text('${vodSerial.year.toString()} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,) : Container(),
+                              vodSerial.genre != null ? Text('${vodSerial.genre.toString()}', style: textTheme.subtitle1, textAlign: TextAlign.start,) : Container(),
+                            ]
+                        ),
+                      ),
+                      // Content description
+                      Container(
+                        child: Text(
+                          vodSerial.description != null ? vodSerial.description : '',
+                          style: textTheme.bodyText1,
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    ],
                   )
-                ],
-              )
-          ),
-          SizedBox(
-              width: 20
-          ),
-          Container(
-            width: 358,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:<Widget>[
-                  SizedBox(
-                      height: 60
-                  ),
-                  Text(
-                    'Director: ${vodSerial.director}',
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    ),
-                  ),
-                  Text(
-                    'Actors: ${vodSerial.actors}',
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    ),
+              ),
+              // Spacer between content in middle
+              Container(
+                width: 60,
+              ),
+              // Director, Actors
+              Container(
+                  height: 162,
+                  width: 190,
+                  child: Column(
+                    children: [
+                      // Year
+                      vodSerial.year != null ? Container(
+                        alignment: Alignment.bottomLeft,
+                        height: 72,
+                        child: IntrinsicHeight(
+                          child: Row(
+                              children: [
+                                Text('Year: ', style: textTheme.headline3, textAlign: TextAlign.left,),
+                                Expanded (
+                                  child: Text(vodSerial.year, style: textTheme.bodyText2, textAlign: TextAlign.left,),
+                                ),
+                              ]
+                          ),
+                        ),
+                      ) : Container(),
+                      // Director
+                      vodSerial.director != null ? IntrinsicHeight(
+                        child: Row(
+                            children: [
+                              Text('Director: ',
+                                  textAlign: TextAlign.left, style: textTheme.headline3),
+                              Expanded (
+                                child: Text(vodSerial.director,
+                                  textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                              ),
+                            ]
+                        ),
+                      ) : Container(),
+                      // Actors
+                      vodSerial.actors != null ? IntrinsicHeight(
+                        child: Row(
+                            children: [
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text('Actors: ',
+                                    textAlign: TextAlign.left, style: textTheme.headline3),
+                              ),
+                              Expanded (
+                                child: Text(vodSerial.actors,
+                                  textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                              ),
+                            ]
+                        ),
+                      ) : Container(),
+                      // Genre
+                      vodSerial.genre != null ? IntrinsicHeight(
+                        child: Row(
+                            children: [
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text('Genre: ',
+                                  textAlign: TextAlign.start, style: textTheme.headline3,),
+                              ),
+                              Expanded (
+                                child: Text(vodSerial.genre,
+                                  textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                              ),
+                            ]
+                        ),
+                      ) : Container(),
+                    ],
                   )
-                ]
-            ),
-          ),
-        ]
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
@@ -200,82 +312,124 @@ class ShowInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-        children:<Widget>[
-          Container(
-              width: 464,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    show.title,
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 23
-                    ),
-                  ),
-                  Text(
-                    '1h 36min | ${show.channel.title} | ${show.genre}',
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    style: TextStyle(
-                        color: Colors.white60,
-                        fontSize: 13
-                    ),
-                  ),
-                  SizedBox(
-                      height: 20
-                  ),
-                  Text(
-                    '${show.description}',
-                    textAlign: TextAlign.left,
-                    maxLines: 5,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    ),
-                  )
-                ],
-              )
-          ),
-          SizedBox(
-              width: 20
-          ),
-          Container(
-            width: 358,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:<Widget>[
-                  SizedBox(
-                      height: 60
-                  ),
-                  Text(
-                    'Director: ${show.director}',
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    ),
-                  ),
-                  Text(
-                    'Actors: ${show.actors}',
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15
-                    ),
-                  )
-                ]
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    return Container(
+        height: 240,
+        width: 960,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Spacer top
+            Container(
+              height: 0,
+              width: 960,
             ),
-          ),
-        ]
+            Row(
+              children: [
+                // Spacer - left
+                Container(
+                  width: 180,
+                  height: 162,
+                ),
+                // Basic Content info
+                Container(
+                    width: 480,
+                    height: 162,
+                    child: Column(
+                      children: [
+                        // Content Title
+                        Container(
+                          alignment: Alignment.topLeft,
+                          height: 28,
+                          child: Text(show.title, style: textTheme.headline1,  textAlign: TextAlign.left,),
+                        ),
+                        // Content meta data
+                        Container(
+                          height: 28,
+                          child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('${show.startTime.toString()} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,),
+                                Text('${show.endTime.toString()} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,),
+                                Text(show.channel.title.toUpperCase(), style: textTheme.subtitle2,)
+                              ]
+                          ),
+                        ),
+                        // Content description
+                        Container(
+                          child: Text(
+                            show.description != null ? show.description : '',
+                            style: textTheme.bodyText1,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )
+                      ],
+                    )
+                ),
+                // Spacer between content in middle
+                Container(
+                  width: 60,
+                ),
+                // Director, Actors
+                Container(
+                    height: 162,
+                    width: 190,
+                    child: Column(
+                      children: [
+                        // Year
+                        // Director
+                        show.director != null ? IntrinsicHeight(
+                          child: Row(
+                              children: [
+                                Text('Director: ',
+                                    textAlign: TextAlign.left, style: textTheme.headline3),
+                                Expanded (
+                                  child: Text(show.director,
+                                    textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                ),
+                              ]
+                          ),
+                        ) : Container(),
+                        // Actors
+                        show.actors != null ? IntrinsicHeight(
+                          child: Row(
+                              children: [
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text('Actors: ',
+                                      textAlign: TextAlign.left, style: textTheme.headline3),
+                                ),
+                                Expanded (
+                                  child: Text(show.actors,
+                                    textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                ),
+                              ]
+                          ),
+                        ) : Container(),
+                        // Genre
+                        show.genre != null ? IntrinsicHeight(
+                          child: Row(
+                              children: [
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text('Genre: ',
+                                    textAlign: TextAlign.start, style: textTheme.headline3,),
+                                ),
+                                Expanded (
+                                  child: Text(show.genre,
+                                    textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                ),
+                              ]
+                          ),
+                        ) : Container(),
+                      ],
+                    )
+                ),
+              ],
+            )
+          ],
+        )
     );
   }
 }
