@@ -30,9 +30,8 @@ class _showListItemState extends State<showListItem> {
 
   @override
   Widget build(BuildContext context) {
-    var time = DateTime.fromMillisecondsSinceEpoch(this.widget.item.startTime * 1000);
 
-    var dateFormat = DateFormat('HH:mm').format(time);
+    var dateFormat = DateFormat('HH:mm').format(this.widget.item.startTime);
     return Container(
       color: Colors.black87,
       child: Column(

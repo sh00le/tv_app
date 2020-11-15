@@ -355,8 +355,8 @@ class ShowInfo extends StatelessWidget {
                           child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('${show.startTime.toString()} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,),
-                                Text('${show.endTime.toString()} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,),
+                                Text('${show.displayTimeStartToEnd()} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,),
+                                Text('${show.displayDateDay()} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,),
                                 Text(show.channel.title.toUpperCase(), style: textTheme.subtitle2,)
                               ]
                           ),

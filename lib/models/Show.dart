@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:tv_app/models/Image.dart';
 import 'package:tv_app/models/Channel.dart';
 
@@ -9,7 +11,7 @@ class Show {
     String category;
     String description;
     String director;
-    int endTime;
+    DateTime endTime;
     String episode;
     String genre;
     bool isPPV;
@@ -17,7 +19,7 @@ class Show {
     String seriesId;
     bool showClientId;
     int showId;
-    int startTime;
+    DateTime startTime;
     String title;
     bool hasCatchup;
     bool hasRecording;
@@ -60,8 +62,8 @@ class Show {
             seriesId: json['seriesId'], 
             showClientId: json['showClientId'] != null ? json['showClientId'] : false,
             showId: int.parse(json['showId']),
-            startTime: json['startTime'],
-            endTime: json['endTime'],
+            startTime: DateTime.fromMillisecondsSinceEpoch(json['startTime'] * 1000),
+            endTime: DateTime.fromMillisecondsSinceEpoch(json['endTime'] * 1000),
             title: json['title'], 
             userIptvPlayable: (json['userIptvPlayable'] == 1 || json['userIptvPlayable'] == true) ? true : false,
             userLocked: json['userLocked'], 
@@ -87,6 +89,58 @@ class Show {
         return outImage;
     }
 
+    String displayTimeStartToEnd() {
+        var timeFormat = DateFormat('HH:mm');
+        var todayDay = DateTime.now();
+        if ( startTime.isBefore(todayDay) && todayDay.isBefore(endTime)) {
+            return 'NOW';
+        } else {
+            return '${timeFormat.format(startTime)} - ${timeFormat.format(endTime)}';
+        }
+
+    }
+
+    String displayDateDay() {
+        String outDay = '';
+        var weekDay = startTime.weekday;
+        var todayDay = DateTime.now();
+
+        debugPrint('$startTime - $weekDay - ${todayDay.weekday}');
+
+        if (todayDay.weekday == weekDay) {
+            outDay = 'Today';
+        } else if (todayDay.weekday - 1 == weekDay) {
+            outDay = 'Yesterday';
+        } else if (todayDay.weekday + 1 == weekDay) {
+            outDay = 'Tomorrow';
+        } else {
+            switch (weekDay) {
+                case DateTime.monday:
+                    outDay = 'Monday';
+                    break;
+                case DateTime.tuesday:
+                    outDay = 'Tuesday';
+                    break;
+                case DateTime.wednesday:
+                    outDay = 'Wednesday';
+                    break;
+                case DateTime.thursday:
+                    outDay = 'Thursday';
+                    break;
+                case DateTime.friday:
+                    outDay = 'Friday';
+                    break;
+                case DateTime.saturday:
+                    outDay = 'Saturday';
+                    break;
+                case DateTime.sunday:
+                    outDay = 'Sunday';
+                    break;
+            }
+        }
+        return outDay;
+    }
+
     Map<String, dynamic> toJson() {
         final Map<String, dynamic> data = new Map<String, dynamic>();
         data['ageRating'] = this.ageRating;
@@ -94,7 +148,7 @@ class Show {
         data['buyPrice'] = this.buyPrice;
         data['category'] = this.category;
         data['description'] = this.description;
-        data['endTime'] = this.endTime;
+        data['endTime'] = this.endTime.millisecondsSinceEpoch / 1000;
         data['episode'] = this.episode;
         data['genre'] = this.genre;
         data['hasCatchup'] = this.hasCatchup;
@@ -105,7 +159,7 @@ class Show {
         data['season'] = this.season;
         data['seriesId'] = this.seriesId;
         data['showId'] = this.showId;
-        data['startTime'] = this.startTime;
+        data['startTime'] = this.startTime.millisecondsSinceEpoch / 1000;
         data['title'] = this.title;
         data['userIptvPlayable'] = this.userIptvPlayable;
         data['userLocked'] = this.userLocked;
