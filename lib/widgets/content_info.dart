@@ -112,8 +112,11 @@ class VodInfo extends StatelessWidget {
                         vodContent.director != null ? IntrinsicHeight(
                           child: Row(
                               children: [
-                                Text('Director: ',
-                                    textAlign: TextAlign.left, style: textTheme.headline3),
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text('Director: ',
+                                      textAlign: TextAlign.left, style: textTheme.headline3),
+                                ),
                                 Expanded (
                                   child: Text(vodContent.director,
                                     textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
@@ -254,8 +257,11 @@ class VodSerialInfo extends StatelessWidget {
                       vodSerial.director != null ? IntrinsicHeight(
                         child: Row(
                             children: [
-                              Text('Director: ',
-                                  textAlign: TextAlign.left, style: textTheme.headline3),
+                              Container(
+                                alignment: Alignment.topLeft,
+                                child: Text('Director: ',
+                                    textAlign: TextAlign.left, style: textTheme.headline3),
+                              ),
                               Expanded (
                                 child: Text(vodSerial.director,
                                   textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
@@ -377,13 +383,20 @@ class ShowInfo extends StatelessWidget {
                     width: 190,
                     child: Column(
                       children: [
+                        Container(
+                          height: 58,
+                          width: 190,
+                        ),
                         // Year
                         // Director
                         show.director != null ? IntrinsicHeight(
                           child: Row(
                               children: [
-                                Text('Director: ',
-                                    textAlign: TextAlign.left, style: textTheme.headline3),
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: Text('Director: ',
+                                      textAlign: TextAlign.left, style: textTheme.headline3),
+                                ),
                                 Expanded (
                                   child: Text(show.director,
                                     textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
@@ -414,7 +427,7 @@ class ShowInfo extends StatelessWidget {
                                 Container(
                                   alignment: Alignment.topLeft,
                                   child: Text('Genre: ',
-                                    textAlign: TextAlign.start, style: textTheme.headline3,),
+                                      textAlign: TextAlign.left, style: textTheme.headline3),
                                 ),
                                 Expanded (
                                   child: Text(show.genre,

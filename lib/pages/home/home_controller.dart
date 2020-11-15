@@ -170,6 +170,8 @@ class HomeController extends GetxController {
 
   Future onMenuSelect(Menu menuItem) async {
     _recoListController = null;
+    homeStatus.recommendations.data = [];
+    update([homeStatus.recommendations.id]);
     await _getRecommendations(menuItem);
     _recoListController = TVInfiniteScrollController();
     homeStatus.recommendations.widgetStatus = Status.visible;
