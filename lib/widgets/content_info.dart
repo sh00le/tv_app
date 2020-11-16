@@ -100,7 +100,7 @@ class VodInfo extends StatelessWidget {
                           child: IntrinsicHeight(
                             child: Row(
                                 children: [
-                                  Text('Year: ', style: textTheme.headline3, textAlign: TextAlign.left,),
+                                  Text('Year: ', style: textTheme.headline6, textAlign: TextAlign.left,),
                                   Expanded (
                                     child: Text(vodContent.year, style: textTheme.bodyText2, textAlign: TextAlign.left,),
                                   ),
@@ -115,7 +115,7 @@ class VodInfo extends StatelessWidget {
                                 Container(
                                   alignment: Alignment.topLeft,
                                   child: Text('Director: ',
-                                      textAlign: TextAlign.left, style: textTheme.headline3),
+                                      textAlign: TextAlign.left, style: textTheme.headline6),
                                 ),
                                 Expanded (
                                   child: Text(vodContent.director,
@@ -131,7 +131,7 @@ class VodInfo extends StatelessWidget {
                                 Container(
                                   alignment: Alignment.topLeft,
                                   child: Text('Actors: ',
-                                      textAlign: TextAlign.left, style: textTheme.headline3),
+                                      textAlign: TextAlign.left, style: textTheme.headline6),
                                 ),
                                 Expanded (
                                   child: Text(vodContent.actors,
@@ -147,7 +147,7 @@ class VodInfo extends StatelessWidget {
                                 Container(
                                   alignment: Alignment.topLeft,
                                   child: Text('Genre: ',
-                                    textAlign: TextAlign.start, style: textTheme.headline3,),
+                                    textAlign: TextAlign.start, style: textTheme.headline6,),
                                 ),
                                 Expanded (
                                   child: Text(vodContent.genre,
@@ -245,7 +245,7 @@ class VodSerialInfo extends StatelessWidget {
                         child: IntrinsicHeight(
                           child: Row(
                               children: [
-                                Text('Year: ', style: textTheme.headline3, textAlign: TextAlign.left,),
+                                Text('Year: ', style: textTheme.headline6, textAlign: TextAlign.left,),
                                 Expanded (
                                   child: Text(vodSerial.year, style: textTheme.bodyText2, textAlign: TextAlign.left,),
                                 ),
@@ -260,7 +260,7 @@ class VodSerialInfo extends StatelessWidget {
                               Container(
                                 alignment: Alignment.topLeft,
                                 child: Text('Director: ',
-                                    textAlign: TextAlign.left, style: textTheme.headline3),
+                                    textAlign: TextAlign.left, style: textTheme.headline6),
                               ),
                               Expanded (
                                 child: Text(vodSerial.director,
@@ -276,7 +276,7 @@ class VodSerialInfo extends StatelessWidget {
                               Container(
                                 alignment: Alignment.topLeft,
                                 child: Text('Actors: ',
-                                    textAlign: TextAlign.left, style: textTheme.headline3),
+                                    textAlign: TextAlign.left, style: textTheme.headline6),
                               ),
                               Expanded (
                                 child: Text(vodSerial.actors,
@@ -292,7 +292,7 @@ class VodSerialInfo extends StatelessWidget {
                               Container(
                                 alignment: Alignment.topLeft,
                                 child: Text('Genre: ',
-                                  textAlign: TextAlign.start, style: textTheme.headline3,),
+                                  textAlign: TextAlign.start, style: textTheme.headline6,),
                               ),
                               Expanded (
                                 child: Text(vodSerial.genre,
@@ -395,7 +395,7 @@ class ShowInfo extends StatelessWidget {
                                 Container(
                                   alignment: Alignment.topLeft,
                                   child: Text('Director: ',
-                                      textAlign: TextAlign.left, style: textTheme.headline3),
+                                      textAlign: TextAlign.left, style: textTheme.headline6),
                                 ),
                                 Expanded (
                                   child: Text(show.director,
@@ -411,7 +411,7 @@ class ShowInfo extends StatelessWidget {
                                 Container(
                                   alignment: Alignment.topLeft,
                                   child: Text('Actors: ',
-                                      textAlign: TextAlign.left, style: textTheme.headline3),
+                                      textAlign: TextAlign.left, style: textTheme.headline6),
                                 ),
                                 Expanded (
                                   child: Text(show.actors,
@@ -427,7 +427,7 @@ class ShowInfo extends StatelessWidget {
                                 Container(
                                   alignment: Alignment.topLeft,
                                   child: Text('Genre: ',
-                                      textAlign: TextAlign.left, style: textTheme.headline3),
+                                      textAlign: TextAlign.left, style: textTheme.headline6),
                                 ),
                                 Expanded (
                                   child: Text(show.genre,

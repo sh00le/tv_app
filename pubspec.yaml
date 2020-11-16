@@ -59,6 +59,7 @@ flutter:
     - assets/menu_search.png
     - assets/menu_settings.png
     - assets/menu_vod.png
+    - assets/icons/
     - google_fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see

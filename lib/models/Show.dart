@@ -90,14 +90,39 @@ class Show {
     }
 
     String displayTimeStartToEnd() {
-        var timeFormat = DateFormat('HH:mm');
         var todayDay = DateTime.now();
         if ( startTime.isBefore(todayDay) && todayDay.isBefore(endTime)) {
             return 'NOW';
         } else {
-            return '${timeFormat.format(startTime)} - ${timeFormat.format(endTime)}';
+            return '${displayStartTime()} - ${displayEndTime()}';
         }
+    }
 
+    String displayStartTime() {
+        var timeFormat = DateFormat('HH:mm');
+        return '${timeFormat.format(startTime)}';
+    }
+
+    String displayEndTime() {
+        var timeFormat = DateFormat('HH:mm');
+        return '${timeFormat.format(endTime)}';
+    }
+
+    double showProgress(double width) {
+        double progress = 0.0;
+        var todayDay = DateTime.now();
+        debugPrint('todayDay $todayDay');
+        debugPrint('endTime $endTime');
+
+        if (todayDay.isAfter(endTime) ) {
+            progress = width;
+        } else if (todayDay.isAfter(startTime)) {
+            var duration = endTime.difference(startTime).inSeconds;
+            var currentProgress = todayDay.difference(startTime).inSeconds;
+            progress = (currentProgress / duration) * width;
+        }
+        debugPrint('showProgress $progress');
+        return progress;
     }
 
     String displayDateDay() {
