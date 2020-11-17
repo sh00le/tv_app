@@ -109,12 +109,14 @@ class HomeController extends GetxController {
         debugPrint('SELECT BUTTON');
         if (homeStatus.details.data is VodMovie) {
           debugPrint('VodMovie');
+          Get.toNamed('/vod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'vod' });
         } else if (homeStatus.details.data is VodSerial) {
           debugPrint('VodSerial');
         } else if (homeStatus.details.data is VodEpisode) {
           debugPrint('VodEpisode');
         } else if (homeStatus.details.data is SvodMovie) {
           debugPrint('SVODMovie');
+          Get.toNamed('/vod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'svod' });
         } else if (homeStatus.details.data is SvodSerial) {
           debugPrint('SVODSerial');
         } else if (homeStatus.details.data is SvodEpisode) {

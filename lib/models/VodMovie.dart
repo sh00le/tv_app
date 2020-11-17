@@ -59,7 +59,9 @@ class VodMovie extends DefVodContent{
     );
 
     factory VodMovie.fromJson(Map<String, dynamic> json) {
-        
+
+        print( 'aa: ' + json['id']);
+
         return VodMovie(
             actors: json['actors'],
             ageRating: json['ageRating'], 

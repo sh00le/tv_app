@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:tv_app/pages/epg/details/show.dart';
 import 'package:tv_app/pages/home/home.dart';
 import 'package:tv_app/pages/player/player.dart';
+import 'package:tv_app/pages/vod/movie/vod_movie.dart';
 import 'package:tv_app/services/repository_service.dart';
 import 'package:tv_app/services/style_service.dart';
 
@@ -36,6 +37,8 @@ class TVApp extends StatelessWidget {
           ),
           GetMaterialApp(
             title: 'TV App Demo',
+            defaultTransition: Transition.native,
+            transitionDuration: Duration(milliseconds: 500),
             theme: ThemeData(
               primarySwatch: Colors.blue,
               fontFamily: 'Roboto',
@@ -56,7 +59,8 @@ class TVApp extends StatelessWidget {
             ),
             getPages: [
               GetPage(name: "/", page: () => MyStatelessWidget()),
-              GetPage(name: '/epg/show', page: () => ShowDetailsPage())
+              GetPage(name: '/epg/show', page: () => ShowDetailsPage()),
+              GetPage(name: '/vod/movie', page: () => VodMovieDetailsPage())
             ],
             // home: Scaffold(
             //   body: MyStatelessWidget(),
@@ -73,24 +77,47 @@ class MyStatelessWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    return DefaultTextStyle(
-        style: textTheme.headline6,
-        child: Center(
-            child: Container (
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      // PlayerApp(),
-                      Container(
-                        // color: Colors.black45,
-                        child: Home(),
-                      )
-                    ]
-                )
-            )
-        )
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: DefaultTextStyle(
+          style: textTheme.headline6,
+          child: Center(
+              child: Container (
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        // PlayerApp(),
+                        Container(
+                          // color: Colors.black45,
+                          child: Home(),
+                        )
+                      ]
+                  )
+              )
+          )
+      ),
+    );
+  }
+
+  Future<bool> _onBackPressed() {
+    debugPrint('_onBackPressed');
+    return Get.defaultDialog(
+        title: 'Ready to quit?',
+        backgroundColor: Colors.blueGrey,
+        titleStyle: Get.context.textTheme.headline3,
+        middleText: '',
+        cancelTextColor: Colors.black,
+        confirmTextColor: Colors.black,
+        textCancel: 'No',
+        textConfirm: 'Yes',
+        onCancel: () {
+          Get.back();
+        },
+        onConfirm: () {
+          Navigator.pop(Get.context, true);
+        }
     );
   }
 }

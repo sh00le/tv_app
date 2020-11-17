@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:tv_app/models/Image.dart';
 
 class DefVodContent {
@@ -35,7 +36,7 @@ class DefVodContent {
     this.userFavorite, this.userLocked, this.userOttPlayable, this.userPurchasable,
     this.userPurchasePinRequired, this.watched, this.year});
 
-  Image variation(String variation, String type) {
+  Image imageVariation(String variation, String type) {
     Image outImage;
     if (this.images != null) {
       String _key = Image.generateKey(variation, type);
@@ -46,6 +47,26 @@ class DefVodContent {
     return outImage;
   }
 
+  String displayDuration() {
+    String formattedDuration = '';
+    debugPrint('duration $duration');
+    int minInHour = 60;
+    int hours = duration ~/ minInHour;
+    int minutes = duration % minInHour;
+    if (hours > 0) {
+      formattedDuration = '${hours}h ';
+    }
+    formattedDuration += '${minutes}min ';
+    return formattedDuration;
+  }
+
+  String displayPrice() {
+    if ( int.parse(buyPrice) > 0 ) {
+      return buyPrice + '€';
+    } else {
+      return '';
+    }
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
