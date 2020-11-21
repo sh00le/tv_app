@@ -133,7 +133,6 @@ class TVInfiniteScrollController extends ScrollController {
   final Curve _scrollCurve = Curves.linearToEaseOut ;
   double _offset = 0;
   String _name;
-  _TVInfiniteListViewState _state;
 
 
   @protected
@@ -175,8 +174,15 @@ class TVInfiniteScrollController extends ScrollController {
 class _TVInfiniteListViewState extends State<TVInfiniteListView> {
   int _selectedIndex = 0;
   int _previousSelectedIndex = -1;
+  bool _addFakeItems = false;
 
   void initState() {
+    /// Check if fake items are needed
+    /// Fake items are used so that all items could be scrolled to selectedItemIndex position
+    if (widget.posChildCount != null && widget.selectedItemIndex != null) {
+      _addFakeItems = true;
+    }
+
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.controller.setItemSize(widget.itemSize);
@@ -249,53 +255,83 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollInfo) {
-        if (scrollInfo is ScrollStartNotification) {
-          Future.delayed(Duration.zero, () {
-            widget.onScrollStart?.call();
-            setState(() {
-              _selectedIndex = null;
-            });
-          });
-        }
-        if (scrollInfo is ScrollEndNotification) {
-          widget.onScrollEnd?.call();
+    double _posFakeItemSize = 0;
+    double _negFakeItemSize = 0;
 
-          //snap to item
-          double offset = _calcItemPosition(
-            pixel: scrollInfo.metrics.pixels,
-            itemSize: widget.itemSize,
+    return LayoutBuilder(
+        builder: (BuildContext ctx, BoxConstraints constraint) {
+
+          /// Adding fake items in order to scroll to selected index position
+          if (_addFakeItems) {
+            _posFakeItemSize = (widget.scrollDirection == Axis.horizontal
+                ? constraint.maxWidth
+                : constraint.maxHeight) - (widget.selectedItemIndex + 1) * widget.itemSize;
+            _negFakeItemSize = widget.selectedItemIndex * widget.itemSize;
+          }
+          return NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo is ScrollStartNotification) {
+                Future.delayed(Duration.zero, () {
+                  widget.onScrollStart?.call();
+                  setState(() {
+                    _selectedIndex = null;
+                  });
+                });
+              }
+              if (scrollInfo is ScrollEndNotification) {
+                widget.onScrollEnd?.call();
+
+                //snap to item
+                double offset = _calcItemPosition(
+                  pixel: scrollInfo.metrics.pixels,
+                  itemSize: widget.itemSize,
+                );
+
+                //only animate if not yet snapped (tolerance 0.01 pixel)
+                if ((scrollInfo.metrics.pixels - offset).abs() > 0.01) {
+                  _animateSnapScroll(offset);
+                } else {
+                  _setSelectedItem();
+                  setState(() {});
+                }
+              }
+              return true;
+            },
+            child: InfiniteList(
+                controller: widget.controller,
+                direction: widget.direction,
+                scrollDirection: widget.scrollDirection,
+                posChildCount: _addFakeItems ? widget.posChildCount + 1 : widget.posChildCount,
+                negChildCount: _addFakeItems ? 1 :  widget.negChildCount ,
+                anchor: widget.anchor,
+                builder: (context, index) {
+                  // debugPrint('InfiniteList index: $index _selectedIndex: $_selectedIndex');
+                  bool isSelected = index == _calculateSelectedIndex() ? true : false;
+                  int itemIndex = _recalculateIndex(index);
+                  return InfiniteListItem(
+                    contentBuilder: (BuildContext context) {
+                      if (_addFakeItems && (index >= widget.posChildCount) || index < 0) {
+                        if (index < 0) {
+                          return SizedBox(
+                            height: widget.scrollDirection == Axis.horizontal ? 1 : _negFakeItemSize,
+                            width: widget.scrollDirection == Axis.horizontal ? _negFakeItemSize : 1,
+                          );
+                        } else {
+                          return SizedBox(
+                            height: widget.scrollDirection == Axis.horizontal ? 1 : _posFakeItemSize,
+                            width: widget.scrollDirection == Axis.horizontal ? _posFakeItemSize : 1,
+                          );
+                        }
+                      } else {
+                        return widget.itemBuilder(context, itemIndex, isSelected);
+                      }
+
+                    },
+                  );
+                }
+            ),
           );
-
-          //only animate if not yet snapped (tolerance 0.01 pixel)
-          if ((scrollInfo.metrics.pixels - offset).abs() > 0.01) {
-            _animateSnapScroll(offset);
-          } else {
-            _setSelectedItem();
-            setState(() {});
-          }
         }
-        return true;
-      },
-      child: InfiniteList(
-          controller: widget.controller,
-          direction: widget.direction,
-          scrollDirection: widget.scrollDirection,
-          posChildCount: widget.posChildCount,
-          negChildCount: widget.negChildCount,
-          anchor: widget.anchor,
-          builder: (context, index) {
-            // debugPrint('InfiniteList index: $index _selectedIndex: $_selectedIndex');
-            bool isSelected = index == _calculateSelectedIndex() ? true : false;
-            int itemIndex = _recalculateIndex(index);
-            return InfiniteListItem(
-              contentBuilder: (BuildContext context) {
-                return widget.itemBuilder(context, itemIndex, isSelected);
-              },
-            );
-          }
-      ),
     );
   }
 
