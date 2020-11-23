@@ -10,11 +10,10 @@ class Image {
     factory Image.fromJson(Map<String, dynamic> json) {
         RegExp regExp = new RegExp(r"_\d+_(.+)\.");
         final match = regExp.firstMatch(json['imageUrl']);
-
         return Image(
             imageType: json['imageType'],
             imageUrl: json['imageUrl'],
-            variation: match.group(1)
+            variation: match != null ? match.group(1) : '0'
         );
     }
 

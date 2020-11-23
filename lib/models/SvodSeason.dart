@@ -1,9 +1,12 @@
+import 'package:tv_app/models/DefVodSeason.dart';
 import 'package:tv_app/models/Image.dart';
-import 'package:tv_app/models/SvodMovie.dart';
+import 'package:tv_app/models/SvodEpisode.dart';
+import 'package:tv_app/models/VodEpisode.dart';
+import 'package:tv_app/models/VodMovie.dart';
 
-class SvodSeason {
-    List<Image> images;
-    List<SvodMovie> episodes;
+class SvodSeason extends DefVodSeason {
+    Map<String, Image> images;
+    List<VodEpisode> episodes;
     String externalCode;
     String id;
     String originalTitle;
@@ -15,10 +18,10 @@ class SvodSeason {
 
     factory SvodSeason.fromJson(Map<String, dynamic> json) {
         return SvodSeason(
-            episodes: json['episodes'] != null ? (json['episodes'] as List).map((i) => SvodMovie.fromJson(i)).toList() : null,
+            episodes: json['episodes'] != null ? (json['episodes'] as List).map((i) => VodEpisode.fromJson(i)).toList() : null,
             externalCode: json['externalCode'], 
-            id: json['id'], 
-            images: json['images'] != null ? (json['images'] as List).map((i) => Image.fromJson(i)).toList() : null, 
+            id: json['id'],
+            images: json['images'] != null ? Image.parseImageJson(json['images']) : null,
             originalTitle: json['originalTitle'], 
             title: json['title'], 
             userBookmarkPercentage: json['userBookmarkPercentage'], 
@@ -38,7 +41,7 @@ class SvodSeason {
             data['episodes'] = this.episodes.map((v) => v.toJson()).toList();
         }
         if (this.images != null) {
-            data['images'] = this.images.map((v) => v.toJson()).toList();
+            // data['images'] = this.images.map((v) => v.toJson()).toList();
         }
         return data;
     }

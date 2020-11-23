@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tv_app/models/Show.dart';
+import 'package:tv_app/models/VodEpisode.dart';
 import 'package:tv_app/models/VodMovie.dart';
 import 'package:tv_app/models/VodSerial.dart';
 import 'package:tv_app/models/SvodMovie.dart';
@@ -32,8 +33,11 @@ class ContentListItem extends StatelessWidget {
 
   /// Detect content type widget
   Widget getContentWidget() {
+    debugPrint('$item');
     if (item is Show) {
       return showListItem(item: item);
+    } else if (item is VodEpisode) {
+      return VodListItem(item: item);
     } else if (item is VodMovie) {
       return VodListItem(item: item);
     } else if (item is VodSerial) {

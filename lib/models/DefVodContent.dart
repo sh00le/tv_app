@@ -61,7 +61,7 @@ class DefVodContent {
   }
 
   String displayPrice() {
-    if ( int.parse(buyPrice) > 0 ) {
+    if ( double.parse(buyPrice) > 0 ) {
       return buyPrice + '€';
     } else {
       return '';

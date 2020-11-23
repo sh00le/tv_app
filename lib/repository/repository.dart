@@ -107,8 +107,8 @@ class Repository {
     return VodEpisode.fromJson(vodJson);
   }
 
-  SvodMovie _svodMovieFromJson(Map<String, dynamic> svodJson) {
-    return SvodMovie.fromJson(svodJson);
+  SvodEpisode _svodMovieFromJson(Map<String, dynamic> svodJson) {
+    return SvodEpisode.fromJson(svodJson);
   }
   
   SvodEpisode _svodEpisodeFromJson(Map<String, dynamic> svodJson) {

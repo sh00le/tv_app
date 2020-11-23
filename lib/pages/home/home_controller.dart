@@ -95,6 +95,11 @@ class HomeController extends GetxController {
       _focusedListController = _menuListController;
     }
 
+    debugPrint('handleKeyEvent Get.isDialogOpen: ${Get.isDialogOpen}');
+    if (Get.isDialogOpen == true) {
+      event = null;
+    }
+
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
         _focusedListController.prevItem();
@@ -112,6 +117,7 @@ class HomeController extends GetxController {
           Get.toNamed('/vod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'vod' });
         } else if (homeStatus.details.data is VodSerial) {
           debugPrint('VodSerial');
+          Get.toNamed('/vod/serial', arguments: { 'serialId':homeStatus.details.data.id, 'type': 'vod' });
         } else if (homeStatus.details.data is VodEpisode) {
           debugPrint('VodEpisode');
         } else if (homeStatus.details.data is SvodMovie) {
@@ -119,6 +125,7 @@ class HomeController extends GetxController {
           Get.toNamed('/vod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'svod' });
         } else if (homeStatus.details.data is SvodSerial) {
           debugPrint('SVODSerial');
+          Get.toNamed('/vod/serial', arguments: { 'serialId':homeStatus.details.data.id, 'type': 'svod' });
         } else if (homeStatus.details.data is SvodEpisode) {
           debugPrint('SVODEpisode');
         } else if (homeStatus.details.data is Show) {

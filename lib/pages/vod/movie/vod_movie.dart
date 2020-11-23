@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tv_app/pages/vod/movie/vod_movie_controller.dart';
-import 'package:tv_app/services/style_service.dart';
 import 'package:tv_app/widgets/image_network/imageNetwork.dart';
 
 class VodMovieDetailsPage extends StatelessWidget {
@@ -37,10 +37,86 @@ class VodMovieDetailsPage extends StatelessWidget {
                     child: Row(
                       children: [
                         // Spacer - left
-                        Container(
-                          width: 180,
-                          height: 172,
+                      Shortcuts(
+                      shortcuts: <LogicalKeySet, Intent>{
+                      LogicalKeySet(LogicalKeyboardKey.select): ActivateIntent(),
+                    },
+                      child: Container(
+                        alignment: Alignment.topCenter,
+                        color: Colors.black45,
+                        width: 170,
+                        // height: 174,
+                        child: ListView(
+                          itemExtent: 40,
+                          children: [
+                            FlatButton(
+                              autofocus: true,
+                              focusColor: Color.fromRGBO( 46,101,126,0.5),
+                              onPressed: () => {
+                                debugPrint('watch',)
+                              },
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text('watch', textAlign: TextAlign.right, style: textTheme.headline4)
+                              ),
+                            ),
+                            FlatButton(
+                              focusColor: Color.fromRGBO( 46,101,126,0.5),
+                              onPressed: () => {
+                                debugPrint('add to favorites',)
+                              },
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text('add to favorites u dva reda tekst', textAlign: TextAlign.right, style: textTheme.headline4,)
+                              ),
+                            ),
+                            FlatButton(
+                              focusColor: Color.fromRGBO( 46,101,126,0.5),
+                              onPressed: () => {
+                                debugPrint('like',)
+                              },
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text('like', textAlign: TextAlign.right, style: textTheme.headline4,)
+                              ),
+                            ),
+                            FlatButton(
+                              focusColor: Color.fromRGBO( 46,101,126,0.5),
+                              onPressed: () => {
+                                debugPrint('dislike',)
+                              },
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text('dislike', textAlign: TextAlign.right, style: textTheme.headline4,)
+                              ),
+                            ),
+                            FlatButton(
+                              focusColor: Color.fromRGBO( 46,101,126,0.5),
+                              onPressed: () => {
+                                debugPrint('similar content',)
+                              },
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text('similar content', textAlign: TextAlign.right, style: textTheme.headline4,)
+                              ),
+                            ),
+                            FlatButton(
+                              focusColor: Color.fromRGBO( 46,101,126,0.5),
+                              onPressed: () => {
+                                debugPrint('back',)
+                              },
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text('back', textAlign: TextAlign.right, style: textTheme.headline4,)
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                    ),
+                    Container(
+                      width: 10,
+                    ),
                         // Basic Content info
                         Container(
                             width: 430,
@@ -67,6 +143,7 @@ class VodMovieDetailsPage extends StatelessWidget {
                                 ),
                                 // Content description
                                 Container(
+                                  alignment: Alignment.topLeft,
                                   height: 160,
                                   child: Text(
                                     _.vodMovie.description != null ? _.vodMovie.description : '',
@@ -75,50 +152,6 @@ class VodMovieDetailsPage extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                // Actions
-                                Container(
-                                  // color: Colors.deepPurple,
-                                  height: 30,
-                                  child: ListView(
-                                    physics: const AlwaysScrollableScrollPhysics(),
-                                    scrollDirection: Axis.horizontal,
-                                    children: [
-                                      FlatButton.icon(
-                                          icon: Icon(Icons.play_arrow),//icon image
-                                          label: Text('WATCH', style: textTheme.bodyText1),//text to show in button
-                                          textColor: Colors.white,//button text and icon color.
-                                          color: Color.fromRGBO(46,101,126,1.0),//button background color
-                                          onPressed: () {}
-                                      ),
-                                      Container(width: 10, height: 10,),
-                                      FlatButton.icon(
-                                          icon: Icon(Icons.favorite),//icon image
-                                          label: Text('FAVORITE', style: textTheme.bodyText1),//text to show in button
-                                          textColor: Colors.white,//button text and icon color.
-                                          color: Color.fromRGBO(46,101,126,1.0),//button background color
-                                          onPressed: () {}
-                                      ),
-                                      Container(width: 10, height: 10,),
-                                      FlatButton.icon(
-                                          icon: Icon(Icons.watch_later_outlined),//icon image
-                                          label: Text('REMINDER', style: textTheme.bodyText1),//text to show in button
-                                          textColor: Colors.white,//button text and icon color.
-                                          color: Color.fromRGBO(46,101,126,1.0),//button background color
-                                          onPressed: () {}
-                                      ),
-                                      Container(width: 10, height: 10,),
-                                      FlatButton.icon(
-                                          icon: Icon(Icons.star_border),//icon image
-                                          label: Text('RATE', style: textTheme.bodyText1),//text to show in button
-                                          textColor: Colors.white,//button text and icon color.
-                                          color: Color.fromRGBO(46,101,126,1.0),//button background color
-                                          onPressed: () {}
-                                      ),
-                                      Container(width: 10, height: 10,),
-                                    ],
-                                  ),
-                                  // width: 200
-                                )
                               ],
                             )
                         ),

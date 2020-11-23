@@ -24,7 +24,7 @@ class SvodSerial extends DefVodSerial {
     bool userOttPlayable,
     bool ottAvailable,
     List<SvodSeason> seasons,
-    List<Image> images }) : super(
+    Map<String, Image> images}) : super(
       id: id,
       title: title,
       originalTitle: originalTitle,
@@ -68,7 +68,8 @@ class SvodSerial extends DefVodSerial {
       userOttPlayable: (json['userOttPlayable'] == 1 || json['userOttPlayable'] == true) ? true : false,
       ottAvailable: (json['ottAvailable'] == 1 || json['ottAvailable'] == true) ? true : false,
       seasons: seasonJson!= null ? seasonJson.map((i) => SvodSeason.fromJson(i)).toList() : null,
-      images: json['images'] != null ? (json['images'] as List).map((i) => Image.fromJson(i)).toList() : null,
+      // images: json['images'] != null ? (json['images'] as List).map((i) => Image.fromJson(i)).toList() : null,
+      images: json['images'] != null ? Image.parseImageJson(json['images']) : null,
     );
   }
 

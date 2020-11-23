@@ -1,8 +1,9 @@
+import 'package:tv_app/models/DefVodSeason.dart';
 import 'package:tv_app/models/Image.dart';
 
 class DefVodSerial {
-    List<dynamic> seasons;
-    List<Image> images;
+    List<DefVodSeason> seasons;
+    Map<String, Image> images;
     String id;
     String title;
     String originalTitle;
@@ -27,27 +28,24 @@ class DefVodSerial {
         this.licenceExpiration, this.userBookmarkPercentage, this.matchRating, this.userLocked,
         this.userFavorite, this.userOttPlayable, this.ottAvailable, this.seasons, this.images});
 
-    Image variation(String variation, String type) {
+    Image imageVariation(String variation, String type) {
         Image outImage;
-
-        this.images.forEach((image) {
-            if (image.imageType == type) {
-                if (image.variation == variation) {
-                    outImage = image;
-                }
+        if (this.images != null) {
+            String _key = Image.generateKey(variation, type);
+            if (this.images.containsKey(_key)) {
+                outImage = this.images[_key];
             }
-        });
-
+        }
         return outImage;
     }
 
     Map<String, dynamic> toJson() {
         final Map<String, dynamic> data = new Map<String, dynamic>();
         if (this.seasons != null) {
-            data['seasons'] = this.seasons.map((v) => v.toJson()).toList();
+            // data['seasons'] = this.seasons.map((v) => v.toJson()).toList();
         }
         if (this.images != null) {
-            data['images'] = this.images.map((v) => v.toJson()).toList();
+            // data['images'] = this.images.map((v) => v.toJson()).toList();
         }
         data['id'] = this.id;
         data['title'] = this.title;

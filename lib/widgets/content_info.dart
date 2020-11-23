@@ -346,8 +346,12 @@ class ShowInfo extends StatelessWidget {
                         // Content Title
                         Container(
                           alignment: Alignment.topLeft,
-                          height: 28,
-                          child: Text(show.title, style: textTheme.headline1,  textAlign: TextAlign.left,),
+                          // height: 28,
+                          child: Text(
+                            show.title,
+                            style: textTheme.headline1,
+                            textAlign: TextAlign.left,
+                            maxLines: 2,),
                         ),
                         // Content meta data
                         Container(
@@ -363,6 +367,7 @@ class ShowInfo extends StatelessWidget {
                         ),
                         // Content description
                         Container(
+                          alignment: Alignment.topLeft,
                           child: Text(
                             show.description != null ? show.description : '',
                             style: textTheme.bodyText1,

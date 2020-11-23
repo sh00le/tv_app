@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tv_app/models/Show.dart';
 import 'package:tv_app/pages/epg/details/show_details_page_controller.dart';
@@ -34,14 +35,90 @@ class ShowDetailsPage extends StatelessWidget {
                     width: 960,
                   ),
                   Container(
-                    height: 280,
+                    height: 466,
                     width: 960,
                     child: Row(
                       children: [
                         // Spacer - left
+                        Shortcuts(
+                          shortcuts: <LogicalKeySet, Intent>{
+                            LogicalKeySet(LogicalKeyboardKey.select): ActivateIntent(),
+                          },
+                          child: Container(
+                            alignment: Alignment.topCenter,
+                              color: Colors.black45,
+                              width: 170,
+                              // height: 174,
+                              child: ListView(
+                                itemExtent: 40,
+                                children: [
+                                  FlatButton(
+                                    autofocus: true,
+                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
+                                    onPressed: () => {
+                                      debugPrint('watch',)
+                                    },
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text('watch', textAlign: TextAlign.right, style: textTheme.headline4)
+                                    ),
+                                  ),
+                                  FlatButton(
+                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
+                                    onPressed: () => {
+                                      debugPrint('add to favorites',)
+                                    },
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text('add to favorites u dva reda tekst', textAlign: TextAlign.right, style: textTheme.headline4,)
+                                    ),
+                                  ),
+                                  FlatButton(
+                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
+                                    onPressed: () => {
+                                      debugPrint('like',)
+                                    },
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text('like', textAlign: TextAlign.right, style: textTheme.headline4,)
+                                    ),
+                                  ),
+                                  FlatButton(
+                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
+                                    onPressed: () => {
+                                      debugPrint('dislike',)
+                                    },
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text('dislike', textAlign: TextAlign.right, style: textTheme.headline4,)
+                                    ),
+                                  ),
+                                  FlatButton(
+                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
+                                    onPressed: () => {
+                                      debugPrint('similar content',)
+                                    },
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text('similar content', textAlign: TextAlign.right, style: textTheme.headline4,)
+                                    ),
+                                  ),
+                                  FlatButton(
+                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
+                                    onPressed: () => {
+                                      debugPrint('back',)
+                                    },
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text('back', textAlign: TextAlign.right, style: textTheme.headline4,)
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          ),
+                        ),
                         Container(
-                          width: 180,
-                          height: 172,
+                          width: 10,
                         ),
                         // Basic Content info
                         Container(
@@ -53,8 +130,12 @@ class ShowDetailsPage extends StatelessWidget {
                                 Container(
                                   // color: Colors.yellow,
                                   alignment: Alignment.topLeft,
-                                  height: 28,
-                                  child: Text(_.show.title, style: textTheme.headline1,  textAlign: TextAlign.left,),
+                                  // height: 28,
+                                  child: Text(
+                                    _.show.title,
+                                    style: textTheme.headline1,
+                                    textAlign: TextAlign.left,
+                                    maxLines: 2,),
                                 ),
                                 // Content meta data
                                 Container(
@@ -70,58 +151,16 @@ class ShowDetailsPage extends StatelessWidget {
                                 ),
                                 // Content description
                                 Container(
+                                  alignment: Alignment.topLeft,
                                   height: 160,
                                   child: Text(
                                     _.show.description != null ? _.show.description : '',
                                     style: textTheme.bodyText1,
-                                    maxLines: 7,
+                                    maxLines: 11,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 // Actions
-                                Container(
-                                  // color: Colors.deepPurple,
-                                  height: 30,
-                                  child: ListView(
-                                    physics: const AlwaysScrollableScrollPhysics(),
-                                    scrollDirection: Axis.horizontal,
-                                    children: [
-                                      FlatButton.icon(
-                                          icon: Icon(Icons.play_arrow),//icon image
-                                          label: Text('WATCH', style: textTheme.bodyText1),//text to show in button
-                                          textColor: Colors.white,//button text and icon color.
-                                          color: Color.fromRGBO(46,101,126,1.0),//button background color
-                                          onPressed: () {}
-                                      ),
-                                      Container(width: 10, height: 10,),
-                                      FlatButton.icon(
-                                          icon: Icon(Icons.favorite),//icon image
-                                          label: Text('FAVORITE', style: textTheme.bodyText1),//text to show in button
-                                          textColor: Colors.white,//button text and icon color.
-                                          color: Color.fromRGBO(46,101,126,1.0),//button background color
-                                          onPressed: () {}
-                                      ),
-                                      Container(width: 10, height: 10,),
-                                      FlatButton.icon(
-                                          icon: Icon(Icons.watch_later_outlined),//icon image
-                                          label: Text('REMINDER', style: textTheme.bodyText1),//text to show in button
-                                          textColor: Colors.white,//button text and icon color.
-                                          color: Color.fromRGBO(46,101,126,1.0),//button background color
-                                          onPressed: () {}
-                                      ),
-                                      Container(width: 10, height: 10,),
-                                      FlatButton.icon(
-                                          icon: Icon(Icons.star_border),//icon image
-                                          label: Text('RATE', style: textTheme.bodyText1),//text to show in button
-                                          textColor: Colors.white,//button text and icon color.
-                                          color: Color.fromRGBO(46,101,126,1.0),//button background color
-                                          onPressed: () {}
-                                      ),
-                                      Container(width: 10, height: 10,),
-                                    ],
-                                  ),
-                                  // width: 200
-                                )
                               ],
                             )
                         ),
@@ -164,7 +203,7 @@ class ShowDetailsPage extends StatelessWidget {
                                 Container(
                                     width: 236,
                                     height: 132,
-                                    child: ImageNetwork(url: _.show.imageVariation('M', 'still').imageUrl, type: 'still', variation: 'M'),
+                                    child: ImageNetwork(url: _.show.imageVariation('XL', 'still').imageUrl, type: 'still', variation: 'M'),
                                 ),
                                 Container(
                                   //color: Colors.orange,
@@ -249,31 +288,31 @@ class ShowDetailsPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    // color: Colors.red,
-                    width: 960,
-                    height: 154,
-                    child: Column(
-                      children: [
-                        Text('More like this', style: textTheme.bodyText2,),
-                        Container(
-                          height: 10,
-                        ),
-                        Image(
-                            width: 15,
-                            height: 15,
-                            image: AssetImage('assets/icons/ic_arrow-down.png')
-                        ),
-                        Container(
-                          height: 20,
-                        ),
-                        Container(
-                            height: 1,
-                            color: Colors.white
-                        )
-                      ],
-                    ),
-                  )
+                  // Container(
+                  //   // color: Colors.red,
+                  //   width: 960,
+                  //   height: 154,
+                  //   child: Column(
+                  //     children: [
+                  //       Text('More like this', style: textTheme.bodyText2,),
+                  //       Container(
+                  //         height: 10,
+                  //       ),
+                  //       Image(
+                  //           width: 15,
+                  //           height: 15,
+                  //           image: AssetImage('assets/icons/ic_arrow-down.png')
+                  //       ),
+                  //       Container(
+                  //         height: 20,
+                  //       ),
+                  //       Container(
+                  //           height: 1,
+                  //           color: Colors.white
+                  //       )
+                  //     ],
+                  //   ),
+                  // )
                 ],
               )
           ),

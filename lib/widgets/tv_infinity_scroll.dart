@@ -20,17 +20,6 @@ class TVInfiniteListView extends StatefulWidget {
   /// render infinite list in both directions
   final InfiniteListDirection direction;
 
-  /// Max child count for positive direction list
-  final int posChildCount;
-
-  /// Max child count for negative list direction
-  ///
-  /// Ignored when [direction] is [InfiniteListDirection.single]
-  ///
-  /// This value should have negative value in order to provide right calculation
-  /// for negative list
-  final int negChildCount;
-
   /// Proxy property for [ScrollView.reverse]
   ///
   /// Package doesn't support it yet.
@@ -101,9 +90,7 @@ class TVInfiniteListView extends StatefulWidget {
 
     this.direction = InfiniteListDirection.multi,
     TVInfiniteScrollController controller,
-    this.posChildCount,
-    this.negChildCount,
-    this.loop = true,
+    @required this.loop,
     this.itemSnapping = true,
     this.selectedItemIndex = 0,
     this.curve = Curves.ease,
@@ -172,6 +159,19 @@ class TVInfiniteScrollController extends ScrollController {
 }
 
 class _TVInfiniteListViewState extends State<TVInfiniteListView> {
+
+  /// Max child count for positive direction list
+  int posChildCount;
+
+  /// Max child count for negative list direction
+  ///
+  /// Ignored when [direction] is [InfiniteListDirection.single]
+  ///
+  /// This value should have negative value in order to provide right calculation
+  /// for negative list
+  int negChildCount;
+
+
   int _selectedIndex = 0;
   int _previousSelectedIndex = -1;
   bool _addFakeItems = false;
@@ -179,8 +179,10 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
   void initState() {
     /// Check if fake items are needed
     /// Fake items are used so that all items could be scrolled to selectedItemIndex position
-    if (widget.posChildCount != null && widget.selectedItemIndex != null) {
+
+    if (widget.itemCount != null && widget.selectedItemIndex != null && widget.loop != true) {
       _addFakeItems = true;
+      posChildCount = widget.itemCount;
     }
 
     super.initState();
@@ -226,7 +228,7 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
   /// Recalculate item index if loop option is set
   int _recalculateIndex(int index) {
     int outIndex = index;
-    if (widget.loop) {
+    if (widget.loop == true) {
       if (widget.itemCount != null && widget.itemCount > 0) {
         outIndex = index % widget.itemCount;
         if (outIndex < 0) {
@@ -301,8 +303,8 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
                 controller: widget.controller,
                 direction: widget.direction,
                 scrollDirection: widget.scrollDirection,
-                posChildCount: _addFakeItems ? widget.posChildCount + 1 : widget.posChildCount,
-                negChildCount: _addFakeItems ? 1 :  widget.negChildCount ,
+                posChildCount: _addFakeItems ? posChildCount + 1 : posChildCount,
+                negChildCount: _addFakeItems ? 1 : negChildCount ,
                 anchor: widget.anchor,
                 builder: (context, index) {
                   // debugPrint('InfiniteList index: $index _selectedIndex: $_selectedIndex');
@@ -310,7 +312,7 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
                   int itemIndex = _recalculateIndex(index);
                   return InfiniteListItem(
                     contentBuilder: (BuildContext context) {
-                      if (_addFakeItems && (index >= widget.posChildCount) || index < 0) {
+                      if (_addFakeItems && ((index >= posChildCount) || index < 0)) {
                         if (index < 0) {
                           return SizedBox(
                             height: widget.scrollDirection == Axis.horizontal ? 1 : _negFakeItemSize,
