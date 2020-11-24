@@ -143,17 +143,22 @@ class TVInfiniteScrollController extends ScrollController {
 
   /// Scroll to previous item
   void prevItem() {
-    _offset = _offset - itemSize;
-    animateTo((_offset), duration: _scrollAnimationDuration, curve: _scrollCurve);
-    // jumpTo(_offset);
+    double newOffset = _offset - itemSize;
+    if (newOffset >= position.minScrollExtent) {
+      _offset = newOffset;
+      animateTo((_offset), duration: _scrollAnimationDuration, curve: _scrollCurve);
+    }
   }
 
   /// Scroll to next item
   void nextItem() {
-    // debugPrint('nextItem before: _offset $_offset itemSize: $itemSize');
-    _offset = _offset + itemSize;
-    // debugPrint('nextItem after: _offset $_offset itemSize: $itemSize');
-    animateTo((_offset), duration: _scrollAnimationDuration, curve: _scrollCurve);
+    double newOffset = _offset + itemSize;
+    if (newOffset <= position.maxScrollExtent) {
+      _offset = newOffset;
+      // debugPrint('nextItem after: _offset $_offset itemSize: $itemSize');
+      animateTo((_offset), duration: _scrollAnimationDuration, curve: _scrollCurve);
+
+    }
     // jumpTo(_offset);
   }
 }

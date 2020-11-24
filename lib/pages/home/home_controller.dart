@@ -95,11 +95,6 @@ class HomeController extends GetxController {
       _focusedListController = _menuListController;
     }
 
-    debugPrint('handleKeyEvent Get.isDialogOpen: ${Get.isDialogOpen}');
-    if (Get.isDialogOpen == true) {
-      event = null;
-    }
-
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
         _focusedListController.prevItem();
