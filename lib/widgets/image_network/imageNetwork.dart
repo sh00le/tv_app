@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ImageNetwork extends StatelessWidget {
   final String type;
@@ -14,7 +15,20 @@ class ImageNetwork extends StatelessWidget {
     if (this.url == null) {
       return Image(image: AssetImage('assets/no_img_${this.type}.png'), width: width, height: height,);
     } else {
-      return Image.network(this.url, width: width, height: height,);
+      return Stack(
+        children: [
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+          Center(
+            child: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: this.url,
+            ),
+          )
+        ],
+      );
+      // return Image.network(this.url, width: width, height: height,);
     }
 
   }
