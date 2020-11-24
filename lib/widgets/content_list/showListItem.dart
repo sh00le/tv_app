@@ -48,7 +48,7 @@ class _showListItemState extends State<showListItem> {
               ),
             ),
             Expanded(
-              child: ImageNetwork(url: this.widget.item.imageVariation('M', 'still').imageUrl, type: 'still', variation: 'M'),
+              child: ImageNetwork(url: this.widget.item.imageVariation('M', 'still'), type: 'still', variation: 'M'),
             ),
             Container(
               height: 16,

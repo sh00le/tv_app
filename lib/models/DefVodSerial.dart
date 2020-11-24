@@ -28,15 +28,15 @@ class DefVodSerial {
         this.licenceExpiration, this.userBookmarkPercentage, this.matchRating, this.userLocked,
         this.userFavorite, this.userOttPlayable, this.ottAvailable, this.seasons, this.images});
 
-    Image imageVariation(String variation, String type) {
-        Image outImage;
+    String imageVariation(String variation, String type) {
+        String outImageUrl;
         if (this.images != null) {
             String _key = Image.generateKey(variation, type);
             if (this.images.containsKey(_key)) {
-                outImage = this.images[_key];
+                outImageUrl = this.images[_key].imageUrl;
             }
         }
-        return outImage;
+        return outImageUrl;
     }
 
     Map<String, dynamic> toJson() {

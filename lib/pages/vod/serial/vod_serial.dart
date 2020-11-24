@@ -82,69 +82,72 @@ class VodSerialDetailsPage extends StatelessWidget {
                               // Basic Content info
                               FocusScope(
                                 node: _.serialStatus.content.focusNode,
-                                child: Container(
-                                  width: 430,
-                                  // height: 340,
-                                  child: Column(
-                                    children: [
-                                      // Content Title
-                                      Container(
-                                        // color: Colors.yellow,
-                                        alignment: Alignment.topLeft,
-                                        // height: 28,
-                                        child: Text(_.vodSerial.title, style: textTheme.headline1,  textAlign: TextAlign.left,),
-                                      ),
-                                      // Content meta data
-                                      Container(
-                                        height: 28,
-                                        child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              // Text('${_.vodSerial.year} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,),
-                                              // Text(_.vodSerial.year != null ? _.vodSerial.year : '', style: textTheme.subtitle2,)
-                                            ]
+                                child: GetBuilder<VodSerialDetailsPageController>(
+                                  id: _.serialStatus.content.id,
+                                  builder: (_) => Container(
+                                    width: 430,
+                                    // height: 340,
+                                    child: Column(
+                                      children: [
+                                        // Content Title
+                                        Container(
+                                          // color: Colors.yellow,
+                                          alignment: Alignment.topLeft,
+                                          // height: 28,
+                                          child: Text(_.serialStatus.content.data.title, style: textTheme.headline1,  textAlign: TextAlign.left,),
                                         ),
-                                      ),
-                                      // Content description
-                                      Container(
-                                        alignment: Alignment.topLeft,
-                                        height: 164,
-                                        child: Text(
-                                          _.vodSerial.description != null ? _.vodSerial.description : '',
-                                          style: textTheme.bodyText1,
-                                          maxLines: 7,
-                                          overflow: TextOverflow.ellipsis,
+                                        // Content meta data
+                                        Container(
+                                          height: 28,
+                                          child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('${_.serialStatus.content.data.year} | ', style: textTheme.subtitle1, textAlign: TextAlign.start,),
+                                                Text(_.serialStatus.content.data.year != null ? _.serialStatus.content.data.year : '', style: textTheme.subtitle2,)
+                                              ]
+                                          ),
                                         ),
-                                      ),
-                                      // Seasons
-                                      FocusScope(
-                                        node: _.serialStatus.season.focusNode,
-                                        child: Container(
-                                          padding: EdgeInsets.only(top: 20),
-                                          height: 48,
-                                          child: ListView.separated(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: _.vodSerial.seasons.length,
-                                            itemBuilder: (context, index) {
-                                              return RawMaterialButton(
-                                                focusNode: _.serialStatus.season.seasons[index].focusNode,
-                                                focusColor: Colors.black45,
-                                                focusElevation: 100,
-                                                onPressed: () {
-                                                  debugPrint('aa');
-                                                },
-                                                child: Text(_.vodSerial.seasons[index].getSeasonTitle()),
-                                              );
-                                            },
-                                            separatorBuilder: (context, index) {
-                                              return SizedBox(width: 5,);
-                                            }
-                                          )
+                                        // Content description
+                                        Container(
+                                          alignment: Alignment.topLeft,
+                                          height: 164,
+                                          child: Text(
+                                            _.serialStatus.content.data.description != null ? _.serialStatus.content.data.description : '',
+                                            style: textTheme.bodyText1,
+                                            maxLines: 7,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  )
+                                        // Seasons
+                                        FocusScope(
+                                          node: _.serialStatus.season.focusNode,
+                                          child: Container(
+                                            padding: EdgeInsets.only(top: 20),
+                                            height: 48,
+                                            child: ListView.separated(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: _.vodSerial.seasons.length,
+                                              itemBuilder: (context, index) {
+                                                return RawMaterialButton(
+                                                  focusNode: _.serialStatus.season.seasons[index].focusNode,
+                                                  focusColor: Colors.black45,
+                                                  focusElevation: 100,
+                                                  onPressed: () {
+                                                    debugPrint('aa');
+                                                  },
+                                                  child: Text(_.vodSerial.seasons[index].getSeasonTitle()),
+                                                );
+                                              },
+                                              separatorBuilder: (context, index) {
+                                                return SizedBox(width: 5,);
+                                              }
+                                            )
+                                          ),
+                                        ),
+                                      ],
+                                    )
                               ),
+                                ),
                               ),
                               // Spacer between content in middle
                               Container(
@@ -165,28 +168,28 @@ class VodSerialDetailsPage extends StatelessWidget {
                                     ),
                                       // Show image
                                       Container(
-                                      width: 116,
-                                      height: 165,
-                                      child: ImageNetwork(url: _.vodSerial.imageVariation('M', 'poster').imageUrl, type: 'poster', variation: 'M'),
+                                        width: 116,
+                                        height: 165,
+                                        child: ImageNetwork(url: _.vodSerial.imageVariation('M', 'poster'), type: 'poster', variation: 'M'),
                                     ),
                                       // Director
                                       Container(
                                         height: 20
                                     ),
                                       Container(
-                                      alignment: Alignment.bottomLeft,
-                                      child: _.vodSerial.year != null ? IntrinsicHeight(
+                                        alignment: Alignment.bottomLeft,
+                                        child: _.serialStatus.content.data.year != null ? IntrinsicHeight(
                                         child: Row(
                                             children: [
                                               Text('Year: ', style: textTheme.headline6, textAlign: TextAlign.left,),
                                               Expanded (
-                                                child: Text(_.vodSerial.year, style: textTheme.bodyText2, textAlign: TextAlign.left,),
+                                                child: Text(_.serialStatus.content.data.year, style: textTheme.bodyText2, textAlign: TextAlign.left,),
                                               ),
                                             ]
                                         ),
                                       ) : Container(),
                                     ),
-                                      _.vodSerial.director != null ? IntrinsicHeight(
+                                      _.serialStatus.content.data.director != null ? IntrinsicHeight(
                                       child: Row(
                                           children: [
                                             Container(
@@ -195,14 +198,14 @@ class VodSerialDetailsPage extends StatelessWidget {
                                                   textAlign: TextAlign.left, style: textTheme.headline6),
                                             ),
                                             Expanded (
-                                              child: Text(_.vodSerial.director,
+                                              child: Text(_.serialStatus.content.data.director,
                                                 textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
                                             ),
                                           ]
                                       ),
                                     ) : Container(),
                                       // Actors
-                                      _.vodSerial.actors != null ? IntrinsicHeight(
+                                      _.serialStatus.content.data.actors != null ? IntrinsicHeight(
                                       child: Row(
                                           children: [
                                             Container(
@@ -211,14 +214,14 @@ class VodSerialDetailsPage extends StatelessWidget {
                                                   textAlign: TextAlign.left, style: textTheme.headline6),
                                             ),
                                             Expanded (
-                                              child: Text(_.vodSerial.actors,
+                                              child: Text(_.serialStatus.content.data.actors,
                                                 textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
                                             ),
                                           ]
                                       ),
                                     ) : Container(),
                                       // Genre
-                                      _.vodSerial.genre != null ? IntrinsicHeight(
+                                      _.serialStatus.content.data.genre != null ? IntrinsicHeight(
                                         child: Row(
                                           children: [
                                             Container(
@@ -227,7 +230,7 @@ class VodSerialDetailsPage extends StatelessWidget {
                                                   textAlign: TextAlign.left, style: textTheme.headline6),
                                             ),
                                             Expanded (
-                                              child: Text(_.vodSerial.genre,
+                                              child: Text(_.serialStatus.content.data.genre,
                                                 textAlign: TextAlign.left, style: textTheme.bodyText2, maxLines: 2, overflow: TextOverflow.ellipsis,),
                                             ),
                                           ]
@@ -251,38 +254,42 @@ class VodSerialDetailsPage extends StatelessWidget {
                     // Episode list
                     child: GetBuilder<VodSerialDetailsPageController>(
                       id: _controller.serialStatus.episode.id,
-                      builder: (_) => Container(
-                        height: 165,
-                        child: AnimatedOpacity(
-                          opacity: _.serialStatus.episode.data.isEmpty ? 0.0 : 1.0,
-                          duration: Duration(milliseconds: 400),
-                          child: _.serialStatus.episode.data.isEmpty  ? Container() : TVInfiniteListView(
-                            controller: Get.find<VodSerialDetailsPageController>().episodeListController,
-                            direction: InfiniteListDirection.multi,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _.serialStatus.episode.data.length,
-                            itemSize: 121,
-                            selectedItemIndex: 0,
-                            loop: true,
-                            itemBuilder: (context, index, selected) {
-                              bool isSelected = (_.serialStatus.episode.focusNode.hasFocus && selected) ? true : false;
-                              return ContentListItem(item: _.serialStatus.episode.data[index], selected: isSelected);
-                            },
-                            onItemSelected: (selectedIndex) {
-                              // if (_.homeStatus.recommendations.inFocus) {
-                              //   _homeController.onRecommendationSelect(_.homeStatus.recommendations.data[selectedIndex]);
-                              // }
-                            },
-                            onScrollStart: () {
-                              // SchedulerBinding.instance.addPostFrameCallback((_) {
-                              //   _homeController.onRecommendationScrollStart();
-                              // });
-                            },
-                            onScrollEnd: () {
-                              // SchedulerBinding.instance.addPostFrameCallback((_) {
-                              //   _homeController.onScrollEnd();
-                              // });
-                            },
+                      builder: (_) => FocusScope(
+                        node: _.serialStatus.episode.focusNode,
+                        child: Container(
+                          height: 165,
+                          child: AnimatedOpacity(
+                            opacity: _.serialStatus.episode.data.isEmpty ? 0.0 : 1.0,
+                            duration: Duration(milliseconds: 400),
+                            child: _.serialStatus.episode.data.isEmpty  ? Container() : TVInfiniteListView(
+                              controller: Get.find<VodSerialDetailsPageController>().episodeListController,
+                              direction: InfiniteListDirection.multi,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _.serialStatus.episode.data.length,
+                              itemSize: 121,
+                              selectedItemIndex: 0,
+                              loop: false,
+                              itemBuilder: (context, index, selected) {
+                                bool isSelected = (_.serialStatus.episode.focusNode.hasFocus && selected) ? true : false;
+                                return ContentListItem(item: _.serialStatus.episode.data[index], selected: isSelected);
+                              },
+                              onItemSelected: (selectedIndex) {
+                                _.onEpisodeSelected(_.serialStatus.episode.data[selectedIndex]);
+                                // if (_.homeStatus.recommendations.inFocus) {
+                                //   _homeController.onRecommendationSelect(_.homeStatus.recommendations.data[selectedIndex]);
+                                // }
+                              },
+                              onScrollStart: () {
+                                // SchedulerBinding.instance.addPostFrameCallback((_) {
+                                //   _homeController.onRecommendationScrollStart();
+                                // });
+                              },
+                              onScrollEnd: () {
+                                // SchedulerBinding.instance.addPostFrameCallback((_) {
+                                //   _homeController.onScrollEnd();
+                                // });
+                              },
+                            ),
                           ),
                         ),
                       )

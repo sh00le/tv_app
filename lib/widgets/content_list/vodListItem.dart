@@ -19,7 +19,7 @@ class _VodListItemState extends State<VodListItem> {
     return Column(
       children: <Widget>[
         Expanded(
-          child: ImageNetwork(url: this.widget.item.imageVariation('M', 'poster').imageUrl, type: 'poster', variation: 'M')
+          child: ImageNetwork(url: this.widget.item.imageVariation('M', 'poster'), type: 'poster', variation: 'M')
         ),
       ],
     );

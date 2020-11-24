@@ -203,7 +203,7 @@ class ShowDetailsPage extends StatelessWidget {
                                 Container(
                                     width: 236,
                                     height: 132,
-                                    child: ImageNetwork(url: _.show.imageVariation('XL', 'still').imageUrl, type: 'still', variation: 'M'),
+                                    child: ImageNetwork(url: _.show.imageVariation('XL', 'still'), type: 'still', variation: 'M'),
                                 ),
                                 Container(
                                   //color: Colors.orange,

@@ -59,6 +59,8 @@ flutter:
     - assets/menu_search.png
     - assets/menu_settings.png
     - assets/menu_vod.png
+    - assets/no_img_poster.png
+    - assets/no_img_still.png
     - assets/icons/
     - google_fonts/
 

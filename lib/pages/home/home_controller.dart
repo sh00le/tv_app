@@ -122,10 +122,10 @@ class HomeController extends GetxController {
           debugPrint('VodEpisode');
         } else if (homeStatus.details.data is SvodMovie) {
           debugPrint('SVODMovie');
-          Get.toNamed('/vod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'svod' });
+          Get.toNamed('/svod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'svod' });
         } else if (homeStatus.details.data is SvodSerial) {
           debugPrint('SVODSerial');
-          Get.toNamed('/vod/serial', arguments: { 'serialId':homeStatus.details.data.id, 'type': 'svod' });
+          Get.toNamed('/svod/serial', arguments: { 'serialId':homeStatus.details.data.id, 'type': 'svod' });
         } else if (homeStatus.details.data is SvodEpisode) {
           debugPrint('SVODEpisode');
         } else if (homeStatus.details.data is Show) {

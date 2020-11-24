@@ -64,6 +64,8 @@ class TVApp extends StatelessWidget {
               GetPage(name: '/epg/show', page: () => ShowDetailsPage()),
               GetPage(name: '/vod/movie', page: () => VodMovieDetailsPage()),
               GetPage(name: '/vod/serial', page: () => VodSerialDetailsPage()),
+              GetPage(name: '/svod/movie', page: () => VodMovieDetailsPage()),
+              GetPage(name: '/svod/serial', page: () => VodSerialDetailsPage()),
             ],
             // home: Scaffold(
             //   body: MyStatelessWidget(),

@@ -78,15 +78,15 @@ class Show {
         );
     }
 
-    Image imageVariation(String variation, String type) {
-        Image outImage;
+    String imageVariation(String variation, String type) {
+        String outImageUrl;
         if (this.images != null) {
             String _key = Image.generateKey(variation, type);
             if (this.images.containsKey(_key)) {
-                outImage = this.images[_key];
+                outImageUrl = this.images[_key].imageUrl;
             }
         }
-        return outImage;
+        return outImageUrl;
     }
 
     String displayTimeStartToEnd() {

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:async';
 import 'package:get/get.dart';
 import 'package:tv_app/models/DefVodContent.dart';
 import 'package:tv_app/models/DefVodSeason.dart';
@@ -31,6 +32,7 @@ class Action {
 class ActionStatus {
   static String _id = 'actions';
   FocusScopeNode focusNode = FocusScopeNode();
+  FocusAttachment attachment;
   String get id => _id;
   List<Action> actions = [];
 }
@@ -39,11 +41,14 @@ class ContentStatus {
   static String _id = 'content';
   FocusScopeNode focusNode = FocusScopeNode();
   String get id => _id;
+  var data;
 }
 
 class SeasonsStatus {
   static String _id = 'seasons';
   FocusScopeNode focusNode = FocusScopeNode();
+  FocusAttachment attachment;
+  FocusNode selectedFocusNode;
   List<Season> seasons = [];
   String get id => _id;
   bool hadFocus = false;
@@ -52,6 +57,7 @@ class SeasonsStatus {
 class EpisodeStatus {
   static String _id = 'episodes';
   FocusScopeNode focusNode = FocusScopeNode();
+  FocusAttachment attachment;
   String get id => _id;
   List<DefVodContent> data = [];
 }
@@ -77,10 +83,13 @@ class VodSerialDetailsPageController extends GetxController {
   final SerialDetailsStatus serialStatus = SerialDetailsStatus.init();
   TVInfiniteScrollController _episodeListController = TVInfiniteScrollController();
   DefVodSerial vodSerial;
+  Timer _seasonEpisodesTimer;
 
   TVInfiniteScrollController get episodeListController => _episodeListController;
 
   void init() {
+    serialStatus.content.data = vodSerial;
+
     // Prepare seasons
     prepareSeasons(vodSerial.seasons);
 
@@ -89,32 +98,67 @@ class VodSerialDetailsPageController extends GetxController {
 
 
     // Attach keyboard listener
-    serialStatus.action.focusNode.attach(Get.context, onKey: _handleKeyEvent);
-    serialStatus.season.focusNode.attach(Get.context, onKey: _handleKeyEvent);
+    serialStatus.action.attachment = serialStatus.action.focusNode.attach(Get.context, onKey: _handleKeyEvent);
+    serialStatus.season.attachment = serialStatus.season.focusNode.attach(Get.context, onKey: _handleKeyEvent);
+    serialStatus.episode.attachment = serialStatus.episode.focusNode.attach(Get.context, onKey: _handleKeyEvent);
 
     update([serialStatus.id]);
   }
 
   bool _handleKeyEvent(FocusNode node, RawKeyEvent event) {
-
+    if (event is RawKeyDownEvent) {
+      if (node == serialStatus.episode.focusNode) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+          episodeListController.nextItem();
+        }
+        if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+          episodeListController.prevItem();
+        }
+      }
+    }
     if (event is RawKeyUpEvent) {
+
+      if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+        if (node == serialStatus.episode.focusNode) {
+          onEpisodeSubmit(serialStatus.content.data);
+        }
+      }
+
       if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
         if (node == serialStatus.action.focusNode) {
             serialStatus.action.focusNode.unfocus();
             serialStatus.season.focusNode.requestFocus();
+            serialStatus.season.attachment.reparent();
+
             if (serialStatus.season.hadFocus == false) {
               serialStatus.season.seasons.first.focusNode.requestFocus();
               serialStatus.season.hadFocus = true;
             }
-
         }
       }
+
       if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        debugPrint('111');
         if (node == serialStatus.season.focusNode) {
-          debugPrint('222');
           serialStatus.season.focusNode.unfocus();
           serialStatus.action.focusNode.requestFocus();
+          serialStatus.action.attachment.reparent();
+          update([serialStatus.action.id, serialStatus.season.id]);
+        }
+        if (node == serialStatus.episode.focusNode) {
+          serialStatus.episode.focusNode.unfocus();
+          serialStatus.season.focusNode.requestFocus();
+          serialStatus.season.attachment.reparent();
+          update([serialStatus.episode.id, serialStatus.season.id]);
+        }
+      }
+
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        if (node == serialStatus.season.focusNode) {
+          serialStatus.season.focusNode.unfocus();
+          serialStatus.episode.focusNode.requestFocus();
+          serialStatus.episode.attachment.reparent();
+          serialStatus.content.data = serialStatus.episode.data.first;
+          update([serialStatus.episode.id, serialStatus.season.id, serialStatus.content.id]);
         }
       }
     }
@@ -123,14 +167,31 @@ class VodSerialDetailsPageController extends GetxController {
   }
 
   void _handleFocusChange() {
-    debugPrint('focus changed');
-    serialStatus.season.seasons.forEach((item) {
-      if (item.focusNode.hasFocus) {
-        serialStatus.episode.data = item.episodes;
-      }
-    });
-    update([serialStatus.episode.id]);
-    // debugPrint('${_focusedSeason.title}');
+    if (serialStatus.season.focusNode.hasFocus) {
+      serialStatus.season.seasons.forEach((item) {
+        if (item.focusNode.hasFocus) {
+          if (item.focusNode != serialStatus.season.selectedFocusNode) {
+            serialStatus.season.selectedFocusNode = item.focusNode;
+            _episodeListController = null;
+            serialStatus.episode.data = [];
+
+            update([serialStatus.episode.id]);
+
+            if (_seasonEpisodesTimer != null) {
+              if (_seasonEpisodesTimer.isActive) {
+                _seasonEpisodesTimer.cancel();
+              }
+            }
+
+            _seasonEpisodesTimer = Timer(Duration(milliseconds: 300), () {
+              _episodeListController = TVInfiniteScrollController();
+              serialStatus.episode.data = item.episodes;
+              update([serialStatus.episode.id]);
+            });
+          }
+        }
+      });
+    }
   }
 
   void prepareActions() {
@@ -175,6 +236,18 @@ class VodSerialDetailsPageController extends GetxController {
     });
 
     serialStatus.season.seasons = seasons;
+  }
+
+  void onEpisodeSelected(VodEpisode episode) {
+    if (serialStatus.episode.focusNode.hasFocus) {
+      serialStatus.content.data = episode;
+      debugPrint('${episode.title}');
+      update([serialStatus.content.id]);
+    }
+  }
+
+  void onEpisodeSubmit(VodEpisode episode) {
+    Get.toNamed('/svod/movie', arguments: { 'movieId':episode.id, 'type': 'svod' });
   }
 
 

@@ -194,7 +194,7 @@ class VodMovieDetailsPage extends StatelessWidget {
                                 Container(
                                   width: 116,
                                   height: 165,
-                                  child: ImageNetwork(url: _.vodMovie.imageVariation('M', 'poster').imageUrl, type: 'poster', variation: 'M'),
+                                  child: ImageNetwork(url: _.vodMovie.imageVariation('M', 'poster'), type: 'poster', variation: 'M'),
                                 ),
                                 // Director
                                 Container(
