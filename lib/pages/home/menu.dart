@@ -32,7 +32,7 @@ class HomeMenu extends StatelessWidget {
                 selectedItemIndex: 0,
                 loop: true,
                 itemBuilder: (context, index, selected){
-                  bool _isSelected = _homeController.homeStatus.menu.inFocus && selected ? true : false;
+                  bool _isSelected = _homeController.homeStatus.menu.focusScopeNode.hasFocus && selected ? true : false;
                   return MenuListItem(item: _menu[index], selected: _isSelected);
                 },
                 onItemSelected: (selectedIndex) {

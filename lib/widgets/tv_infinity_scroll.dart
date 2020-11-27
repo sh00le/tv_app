@@ -227,6 +227,8 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
       } else {
         widget.onItemSelected?.call( _calculateSelectedIndex() );
       }
+    } else {
+      widget.onItemSelected?.call( _selectedIndex );
     }
   }
 

@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tv_app/pages/vod/movie/vod_movie_controller.dart';
+import 'package:tv_app/services/style_service.dart';
 import 'package:tv_app/widgets/image_network/imageNetwork.dart';
 
 class VodMovieDetailsPage extends StatelessWidget {
+  final StyleService _style = Get.find<StyleService>();
   final VodMovieDetailsPageController _controller = Get.put(VodMovieDetailsPageController());
 
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
+    _controller.init();
     _controller.getMovie(Get.arguments);
 
     return DefaultTextStyle(
@@ -18,7 +21,7 @@ class VodMovieDetailsPage extends StatelessWidget {
       child: Container(
         width: 950,
         child: GetBuilder<VodMovieDetailsPageController>(
-          id: 'movie',
+          id: _controller.movieDetailsStatus.id,
           builder: ( _ ) => _.vodMovie == null ? Container() :
           Container(
             // height: 350,
@@ -32,92 +35,47 @@ class VodMovieDetailsPage extends StatelessWidget {
                     width: 960,
                   ),
                   Container(
-                    height: 280,
+                    height: 466,
                     width: 960,
                     child: Row(
                       children: [
                         // Spacer - left
-                      Shortcuts(
-                      shortcuts: <LogicalKeySet, Intent>{
-                      LogicalKeySet(LogicalKeyboardKey.select): ActivateIntent(),
-                    },
-                      child: Container(
-                        alignment: Alignment.topCenter,
-                        color: Colors.black45,
-                        width: 170,
-                        // height: 174,
-                        child: ListView(
-                          itemExtent: 40,
-                          children: [
-                            FlatButton(
-                              autofocus: true,
-                              focusColor: Color.fromRGBO( 46,101,126,0.5),
-                              onPressed: () => {
-                                debugPrint('watch',)
-                              },
-                              child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text('watch', textAlign: TextAlign.right, style: textTheme.headline4)
+                        Shortcuts(
+                          shortcuts: <LogicalKeySet, Intent>{
+                            LogicalKeySet(LogicalKeyboardKey.select): ActivateIntent(),
+                          },
+                          child: Container(
+                            alignment: Alignment.topCenter,
+                            color: Colors.black45,
+                            width: 170,
+                          // height: 174,
+                            child: FocusScope(
+                              node: _.movieDetailsStatus.action.focusNode,
+                              child: ListView.builder(
+                                itemExtent: 40,
+                                itemCount: _.movieDetailsStatus.action.actions.length,
+                                itemBuilder: (context, index) {
+                                  return FlatButton(
+                                    autofocus: index == 0 ? true : false,
+                                    focusColor: _style.actionFocusedColor,
+                                    onPressed: () {
+                                      debugPrint('pressed ${_.movieDetailsStatus.action.actions[index].title}');
+                                      _.onActionSubmit(_.movieDetailsStatus.action.actions[index]);
+                                    },
+                                    child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(_.movieDetailsStatus.action.actions[index].title, textAlign: TextAlign.right, style: textTheme.headline4,)
+                                    ),
+                                  );
+                                },
                               ),
-                            ),
-                            FlatButton(
-                              focusColor: Color.fromRGBO( 46,101,126,0.5),
-                              onPressed: () => {
-                                debugPrint('add to favorites',)
-                              },
-                              child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text('add to favorites u dva reda tekst', textAlign: TextAlign.right, style: textTheme.headline4,)
                               ),
-                            ),
-                            FlatButton(
-                              focusColor: Color.fromRGBO( 46,101,126,0.5),
-                              onPressed: () => {
-                                debugPrint('like',)
-                              },
-                              child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text('like', textAlign: TextAlign.right, style: textTheme.headline4,)
-                              ),
-                            ),
-                            FlatButton(
-                              focusColor: Color.fromRGBO( 46,101,126,0.5),
-                              onPressed: () => {
-                                debugPrint('dislike',)
-                              },
-                              child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text('dislike', textAlign: TextAlign.right, style: textTheme.headline4,)
-                              ),
-                            ),
-                            FlatButton(
-                              focusColor: Color.fromRGBO( 46,101,126,0.5),
-                              onPressed: () => {
-                                debugPrint('similar content',)
-                              },
-                              child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text('similar content', textAlign: TextAlign.right, style: textTheme.headline4,)
-                              ),
-                            ),
-                            FlatButton(
-                              focusColor: Color.fromRGBO( 46,101,126,0.5),
-                              onPressed: () => {
-                                debugPrint('back',)
-                              },
-                              child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Text('back', textAlign: TextAlign.right, style: textTheme.headline4,)
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: 10,
-                    ),
-                        // Basic Content info
+                        Container(
+                        width: 10,
+                        ),
+                          // Basic Content info
                         Container(
                             width: 430,
                             // height: 340,
@@ -155,7 +113,7 @@ class VodMovieDetailsPage extends StatelessWidget {
                               ],
                             )
                         ),
-                        // Spacer between content in middle
+                          // Spacer between content in middle
                         Container(
                             height: 90,
                             width: 52,
@@ -179,7 +137,7 @@ class VodMovieDetailsPage extends StatelessWidget {
                             )
 
                         ),
-                        // Show image, Director, Actors
+                          // Show image, Director, Actors
                         Container(
                           // height: 340,
                             width: 236,
@@ -266,31 +224,6 @@ class VodMovieDetailsPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    // color: Colors.red,
-                    width: 960,
-                    height: 154,
-                    child: Column(
-                      children: [
-                        Text('More like this', style: textTheme.bodyText2,),
-                        Container(
-                          height: 10,
-                        ),
-                        Image(
-                            width: 15,
-                            height: 15,
-                            image: AssetImage('assets/icons/ic_arrow-down.png')
-                        ),
-                        Container(
-                          height: 20,
-                        ),
-                        Container(
-                            height: 1,
-                            color: Colors.white
-                        )
-                      ],
-                    ),
-                  )
                 ],
               )
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
@@ -32,13 +33,15 @@ enum Status{
 
 class MenuStatus {
   static String _id = 'menu';
-  bool inFocus;
+  FocusScopeNode focusScopeNode = FocusScopeNode();
+  FocusAttachment attachment;
   String get id => _id;
 }
 
 class RecommendationsStatus{
   static String _id = 'recommendations';
-  bool inFocus;
+  FocusScopeNode focusScopeNode = FocusScopeNode();
+  FocusAttachment attachment;
   Status widgetStatus;
   List data;
   String get id => _id;
@@ -46,7 +49,8 @@ class RecommendationsStatus{
 
 class DetailsStatus{
   static String _id = 'details';
-  bool inFocus;
+  FocusScopeNode focusScopeNode = FocusScopeNode();
+  FocusAttachment attachment;
   Status widgetStatus;
   var data;
   String get id => _id;
@@ -59,11 +63,8 @@ class HomeStatus {
 
 
   HomeStatus.init(){
-    menu.inFocus = true;
-    recommendations.inFocus = false;
     recommendations.widgetStatus = Status.hidden;
     recommendations.data = [];
-    details.inFocus = false;
     details.widgetStatus = Status.hidden;
     details.data = null;
   }
@@ -72,82 +73,100 @@ class HomeStatus {
 class HomeController extends GetxController {
   final TVInfiniteScrollController _menuListController = TVInfiniteScrollController();
   TVInfiniteScrollController _recoListController = TVInfiniteScrollController();
-  TVInfiniteScrollController _focusedListController;
 
   final RepositoryService _repositoryService = Get.find<RepositoryService>();
   final HomeStatus homeStatus = HomeStatus.init();
   bool _isScrolling = false;
-  String _recoCategory;
   Menu _selectedMenuItem;
 
   var items = [];
-  int _cnt = 0;
 
+  void init(BuildContext context) {
+    debugPrint('INIT!!!');
+    homeStatus.menu.attachment = homeStatus.menu.focusScopeNode.attach(context, onKey: _handleKeyEvent);
+    homeStatus.recommendations.attachment = homeStatus.recommendations.focusScopeNode.attach(context, onKey: _handleKeyEvent);
+    homeStatus.details.attachment = homeStatus.details.focusScopeNode.attach(context, onKey: _handleKeyEvent);
+    homeStatus.menu.focusScopeNode.requestFocus();
+
+    // debugPrint('homeStatus.menu.focusScopeNode.hasFocus ${homeStatus.menu.focusScopeNode.hasFocus}');
+  }
+
+  bool _handleKeyEvent(FocusNode node, RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      if (node == homeStatus.recommendations.focusScopeNode) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+          _recoListController.prevItem();
+        }
+        if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+          _recoListController.nextItem();
+        }
+
+        if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+          _handleNavigation();
+        }
+
+      }
+      if (node == homeStatus.menu.focusScopeNode) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+          _menuListController.prevItem();
+        }
+        if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+          _menuListController.nextItem();
+        }
+      }
+    }
+
+    if (_isScrolling == false && event is RawKeyUpEvent) {
+      if (node == homeStatus.menu.focusScopeNode) {
+        if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+          homeStatus.menu.focusScopeNode.unfocus();
+          homeStatus.recommendations.focusScopeNode.requestFocus();
+
+          homeStatus.details.widgetStatus = Status.visible;
+          update([homeStatus.menu.id, homeStatus.recommendations.id, homeStatus.details.id]);
+        }
+      }
+
+      if (node == homeStatus.recommendations.focusScopeNode) {
+        // if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+        //   _handleNavigation();
+        // }
+
+        if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+          homeStatus.recommendations.focusScopeNode.unfocus();
+          homeStatus.menu.focusScopeNode.requestFocus();
+
+          homeStatus.details.widgetStatus = Status.hidden;
+          update([homeStatus.menu.id, homeStatus.recommendations.id, homeStatus.details.id]);
+        }
+      }
+    }
+
+    return true;
+  }
 
   TVInfiniteScrollController get menuController => _menuListController;
   TVInfiniteScrollController get recoController => _recoListController;
 
-  void handleKeyEvent(RawKeyEvent event) {
-    // debugPrint('handleKeyEvent ${event.logicalKey}');
-    if (_focusedListController == null) {
-      _menuListController.setName('menu');
-      _recoListController.setName('reco');
-      _focusedListController = _menuListController;
+  void _handleNavigation() {
+    if (homeStatus.details.data is VodMovie) {
+      Get.toNamed('/vod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'vod' });
+    } else if (homeStatus.details.data is VodSerial) {
+      Get.toNamed('/vod/serial', arguments: { 'serialId':homeStatus.details.data.id, 'type': 'vod' });
+    } else if (homeStatus.details.data is VodEpisode) {
+      Get.toNamed('/vod/episode', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'vod' });
+    } else if (homeStatus.details.data is SvodMovie) {
+      Get.toNamed('/svod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'svod' });
+    } else if (homeStatus.details.data is SvodSerial) {
+      Get.toNamed('/svod/serial', arguments: { 'serialId':homeStatus.details.data.id, 'type': 'svod' });
+    } else if (homeStatus.details.data is SvodEpisode) {
+      Get.toNamed('/svod/episode', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'svod' });
+    } else if (homeStatus.details.data is Show) {
+      Get.toNamed('/epg/show', arguments: homeStatus.details.data.showId);
     }
-
-    if (event is RawKeyDownEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        _focusedListController.prevItem();
-      }
-      if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-        _focusedListController.nextItem();
-      }
-    }
-
-    if (event is RawKeyUpEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
-        debugPrint('SELECT BUTTON');
-        if (homeStatus.details.data is VodMovie) {
-          debugPrint('VodMovie');
-          Get.toNamed('/vod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'vod' });
-        } else if (homeStatus.details.data is VodSerial) {
-          debugPrint('VodSerial');
-          Get.toNamed('/vod/serial', arguments: { 'serialId':homeStatus.details.data.id, 'type': 'vod' });
-        } else if (homeStatus.details.data is VodEpisode) {
-          debugPrint('VodEpisode');
-        } else if (homeStatus.details.data is SvodMovie) {
-          debugPrint('SVODMovie');
-          Get.toNamed('/svod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'svod' });
-        } else if (homeStatus.details.data is SvodSerial) {
-          debugPrint('SVODSerial');
-          Get.toNamed('/svod/serial', arguments: { 'serialId':homeStatus.details.data.id, 'type': 'svod' });
-        } else if (homeStatus.details.data is SvodEpisode) {
-          debugPrint('SVODEpisode');
-        } else if (homeStatus.details.data is Show) {
-          Get.toNamed('/epg/show', arguments: homeStatus.details.data.showId);
-        }
-        // Get.toNamed('/test');
-      }
-
-      if (_isScrolling == false && event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        if (homeStatus.menu.inFocus && homeStatus.recommendations.data.length > 0) {
-          homeStatus.menu.inFocus = false;
-          homeStatus.recommendations.inFocus = true;
-          homeStatus.details.widgetStatus = Status.visible;
-          _focusedListController = _recoListController;
-          update([homeStatus.menu.id, homeStatus.recommendations.id, homeStatus.details.id]);
-        }
-      }
-      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-        if (homeStatus.recommendations.inFocus) {
-          homeStatus.recommendations.inFocus = false;
-          homeStatus.menu.inFocus = true;
-          homeStatus.details.widgetStatus = Status.hidden;
-          _focusedListController = _menuListController;
-          update([homeStatus.menu.id, homeStatus.recommendations.id, homeStatus.details.id]);
-        }
-      }
-    }
+    // Future.delayed(Duration(milliseconds: 150), () {
+    //   homeStatus.recommendations.focusScopeNode.requestFocus();
+    // });
   }
 
   void onScrollEnd() {
@@ -173,12 +192,15 @@ class HomeController extends GetxController {
   }
 
   Future onMenuSelect(Menu menuItem) async {
-    _recoListController = null;
-    homeStatus.recommendations.data = [];
-    update([homeStatus.recommendations.id]);
-    await _getRecommendations(menuItem);
+    if (_selectedMenuItem != menuItem) {
+      _recoListController = null;
+      homeStatus.recommendations.data = [];
+      update([homeStatus.recommendations.id]);
+      await _getRecommendations(menuItem);
+    }
     _recoListController = TVInfiniteScrollController();
     homeStatus.recommendations.widgetStatus = Status.visible;
+
     update([homeStatus.recommendations.id]);
   }
 

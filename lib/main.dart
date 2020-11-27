@@ -7,7 +7,6 @@ import 'package:tv_app/pages/home/home.dart';
 import 'package:tv_app/pages/player/player.dart';
 import 'package:tv_app/pages/vod/movie/vod_movie.dart';
 import 'package:tv_app/pages/vod/serial/vod_serial.dart';
-import 'package:tv_app/pages/vod/serial/vod_serial_controller.dart';
 import 'package:tv_app/services/repository_service.dart';
 import 'package:tv_app/services/style_service.dart';
 
@@ -63,8 +62,10 @@ class TVApp extends StatelessWidget {
               GetPage(name: "/", page: () => MyStatelessWidget()),
               GetPage(name: '/epg/show', page: () => ShowDetailsPage()),
               GetPage(name: '/vod/movie', page: () => VodMovieDetailsPage()),
+              GetPage(name: '/vod/episode', page: () => VodMovieDetailsPage()),
               GetPage(name: '/vod/serial', page: () => VodSerialDetailsPage()),
               GetPage(name: '/svod/movie', page: () => VodMovieDetailsPage()),
+              GetPage(name: '/svod/episode', page: () => VodMovieDetailsPage()),
               GetPage(name: '/svod/serial', page: () => VodSerialDetailsPage()),
             ],
             // home: Scaffold(

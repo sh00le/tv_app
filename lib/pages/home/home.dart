@@ -22,8 +22,6 @@ class _HomeState extends State<Home> {
   final HomeController homeController = Get.put(HomeController());
   bool selectedSpec = false;
   var selectedContentItem;
-  final FocusNode _focusNode = FocusNode();
-
 
 
   @override
@@ -34,6 +32,7 @@ class _HomeState extends State<Home> {
 
   void afterFirstLayout(BuildContext context) {
     debugPrint('!!!!!!aaaaaa!!!!!!!');
+    homeController.init(context);
   }
 
   @override
@@ -44,17 +43,17 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     // FocusScope.of(context).requestFocus(_node);
-    return RawKeyboardListener(
-      focusNode: _focusNode,
-      onKey:  homeController.handleKeyEvent,
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 75,
-              // color: Colors.grey,
-            ),
-            GetBuilder<HomeController>(
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 75,
+            // color: Colors.grey,
+          ),
+          FocusScope(
+            node: homeController.homeStatus.details.focusScopeNode,
+            autofocus: true,
+            child: GetBuilder<HomeController>(
               id: homeController.homeStatus.details.id,
               builder: (_) => Container(
                   height: 165,
@@ -65,13 +64,17 @@ class _HomeState extends State<Home> {
                   )
               ),
             ),
-            Recommendations(),
-            SizedBox(
-              height: 10,
-            ),
-            HomeMenu(),
-          ],
-        ),
+          ),
+          FocusScope(
+            node: homeController.homeStatus.recommendations.focusScopeNode,
+            child: Recommendations()),
+          SizedBox(
+            height: 10,
+          ),
+          FocusScope(
+            node: homeController.homeStatus.menu.focusScopeNode,
+            child: HomeMenu()),
+        ],
       ),
     );
   }

@@ -87,7 +87,8 @@ class VodSerialDetailsPageController extends GetxController {
 
   TVInfiniteScrollController get episodeListController => _episodeListController;
 
-  void init() {
+  void init(Map<String, dynamic> serialInfo) async {
+    await _getSerial(serialInfo);
     serialStatus.content.data = vodSerial;
 
     // Prepare seasons
@@ -95,7 +96,6 @@ class VodSerialDetailsPageController extends GetxController {
 
     // Prepare Content actions
     prepareActions();
-
 
     // Attach keyboard listener
     serialStatus.action.attachment = serialStatus.action.focusNode.attach(Get.context, onKey: _handleKeyEvent);
@@ -114,15 +114,18 @@ class VodSerialDetailsPageController extends GetxController {
         if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
           episodeListController.prevItem();
         }
+        if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+          onEpisodeSubmit(serialStatus.content.data);
+        }
       }
     }
     if (event is RawKeyUpEvent) {
 
-      if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
-        if (node == serialStatus.episode.focusNode) {
-          onEpisodeSubmit(serialStatus.content.data);
-        }
-      }
+      // if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+      //   if (node == serialStatus.episode.focusNode) {
+      //     onEpisodeSubmit(serialStatus.content.data);
+      //   }
+      // }
 
       if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
         if (node == serialStatus.action.focusNode) {
@@ -142,7 +145,11 @@ class VodSerialDetailsPageController extends GetxController {
           serialStatus.season.focusNode.unfocus();
           serialStatus.action.focusNode.requestFocus();
           serialStatus.action.attachment.reparent();
-          update([serialStatus.action.id, serialStatus.season.id]);
+          serialStatus.season.selectedFocusNode = null;
+          serialStatus.episode.data = [];
+          serialStatus.content.data = vodSerial;
+
+          update([serialStatus.action.id, serialStatus.season.id, serialStatus.episode.id, serialStatus.content.id]);
         }
         if (node == serialStatus.episode.focusNode) {
           serialStatus.episode.focusNode.unfocus();
@@ -202,6 +209,11 @@ class VodSerialDetailsPageController extends GetxController {
     _addToFavorites.title = 'Add To Favorites';
     serialStatus.action.actions.add(_addToFavorites);
 
+    Action _markAsWatched = Action();
+    _markAsWatched.id = 'markAsWatched';
+    _markAsWatched.title = 'Mark As Watched';
+    serialStatus.action.actions.add(_markAsWatched);
+
     Action _like = Action();
     _like.id = 'like';
     _like.title = 'Like';
@@ -250,8 +262,20 @@ class VodSerialDetailsPageController extends GetxController {
     Get.toNamed('/svod/movie', arguments: { 'movieId':episode.id, 'type': 'svod' });
   }
 
+  void onActionSubmit(Action action) {
+    switch(action.id) {
+      case 'back':
+        Get.back(result: true);
+        break;
+      default:
+        Get.snackbar(action.title, '', snackPosition: SnackPosition.BOTTOM);
+        break;
 
-  Future getSerial(Map<String, dynamic> serialInfo) async {
+
+    }
+  }
+
+  Future _getSerial(Map<String, dynamic> serialInfo) async {
     var repository;
 
     debugPrint('serialInfo: $serialInfo');
@@ -265,8 +289,6 @@ class VodSerialDetailsPageController extends GetxController {
 
     if (serialId != -1) {
       vodSerial = await repository.serial(serialId);
-
-      init();
 
       debugPrint('${vodSerial.seasons[0].title}');
 

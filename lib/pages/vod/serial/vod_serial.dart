@@ -3,20 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sticky_infinite_list/models/alignments.dart';
 import 'package:tv_app/pages/vod/serial/vod_serial_controller.dart';
+import 'package:tv_app/services/style_service.dart';
 import 'package:tv_app/widgets/content_list/contentListItem.dart';
 import 'package:tv_app/widgets/image_network/imageNetwork.dart';
 import 'package:tv_app/widgets/tv_infinity_scroll.dart';
 
 class VodSerialDetailsPage extends StatelessWidget {
+  final StyleService _style = Get.find<StyleService>();
   final VodSerialDetailsPageController _controller = Get.put(VodSerialDetailsPageController());
 
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final Color _focusedColor = Color.fromRGBO( 46,101,126,0.5);
 
-    debugPrint('VodSerialDetailsPage');
-    _controller.getSerial(Get.arguments);
+    _controller.init(Get.arguments);
+    // _controller.getSerial(Get.arguments);
 
     return DefaultTextStyle(
       style: textTheme.headline6,
@@ -63,9 +64,10 @@ class VodSerialDetailsPage extends StatelessWidget {
                                     itemBuilder: (context, index) {
                                       return FlatButton(
                                       autofocus: index == 0 ? true : false,
-                                      focusColor: _focusedColor,
-                                      onPressed: () => {
-                                        debugPrint('pressed ${_.serialStatus.action.actions[index].title}')
+                                      focusColor: _style.actionFocusedColor,
+                                      onPressed: () {
+                                        debugPrint('pressed ${_.serialStatus.action.actions[index].title}');
+                                        _.onActionSubmit(_.serialStatus.action.actions[index]);
                                       },
                                       child: Align(
                                         alignment: Alignment.centerRight,

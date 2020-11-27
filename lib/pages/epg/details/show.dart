@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:tv_app/models/Show.dart';
+
 import 'package:tv_app/pages/epg/details/show_details_page_controller.dart';
 import 'package:tv_app/services/style_service.dart';
 import 'package:tv_app/widgets/image_network/imageNetwork.dart';
@@ -14,6 +14,7 @@ class ShowDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
+    _controller.init();
     _controller.getShow(Get.arguments);
 
     return DefaultTextStyle(
@@ -21,9 +22,9 @@ class ShowDetailsPage extends StatelessWidget {
       child: Container(
         width: 950,
         child: GetBuilder<ShowDetailsPageController>(
-          id: 'show',
+          id: _controller.showDetailsStatus.id,
           builder: ( _ ) => _.show == null ? Container() :
-          Container(
+            Container(
             // height: 350,
               width: 960,
               child: Column(
@@ -49,71 +50,26 @@ class ShowDetailsPage extends StatelessWidget {
                               color: Colors.black45,
                               width: 170,
                               // height: 174,
-                              child: ListView(
-                                itemExtent: 40,
-                                children: [
-                                  FlatButton(
-                                    autofocus: true,
-                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
-                                    onPressed: () => {
-                                      debugPrint('watch',)
-                                    },
-                                    child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text('watch', textAlign: TextAlign.right, style: textTheme.headline4)
-                                    ),
-                                  ),
-                                  FlatButton(
-                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
-                                    onPressed: () => {
-                                      debugPrint('add to favorites',)
-                                    },
-                                    child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text('add to favorites u dva reda tekst', textAlign: TextAlign.right, style: textTheme.headline4,)
-                                    ),
-                                  ),
-                                  FlatButton(
-                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
-                                    onPressed: () => {
-                                      debugPrint('like',)
-                                    },
-                                    child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text('like', textAlign: TextAlign.right, style: textTheme.headline4,)
-                                    ),
-                                  ),
-                                  FlatButton(
-                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
-                                    onPressed: () => {
-                                      debugPrint('dislike',)
-                                    },
-                                    child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text('dislike', textAlign: TextAlign.right, style: textTheme.headline4,)
-                                    ),
-                                  ),
-                                  FlatButton(
-                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
-                                    onPressed: () => {
-                                      debugPrint('similar content',)
-                                    },
-                                    child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text('similar content', textAlign: TextAlign.right, style: textTheme.headline4,)
-                                    ),
-                                  ),
-                                  FlatButton(
-                                    focusColor: Color.fromRGBO( 46,101,126,0.5),
-                                    onPressed: () => {
-                                      debugPrint('back',)
-                                    },
-                                    child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text('back', textAlign: TextAlign.right, style: textTheme.headline4,)
-                                    ),
-                                  ),
-                                ],
+                              child: FocusScope(
+                                node: _.showDetailsStatus.action.focusNode,
+                                child: ListView.builder(
+                                  itemExtent: 40,
+                                  itemCount: _.showDetailsStatus.action.actions.length,
+                                  itemBuilder: (context, index) {
+                                    return FlatButton(
+                                      autofocus: index == 0 ? true : false,
+                                      focusColor: _style.actionFocusedColor,
+                                      onPressed: () {
+                                        debugPrint('pressed ${_.showDetailsStatus.action.actions[index].title}');
+                                        _.onActionSubmit(_.showDetailsStatus.action.actions[index]);
+                                      },
+                                      child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(_.showDetailsStatus.action.actions[index].title, textAlign: TextAlign.right, style: textTheme.headline4,)
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                           ),
                         ),
