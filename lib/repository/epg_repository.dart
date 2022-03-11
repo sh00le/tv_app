@@ -4,22 +4,22 @@ import 'package:tv_app/models/Show.dart';
 import 'package:tv_app/models/Serial.dart';
 import 'dart:async';
 
-class EpgRepository extends Repository{
-  int _epgStartTime;
-  int _epgEndTime;
+class EpgRepository extends Repository {
+  int? _epgStartTime;
+  int? _epgEndTime;
 
   int _getEpgStartTime() {
     if (_epgStartTime == null) {
       _epgStartTime = DateTime.now().millisecondsSinceEpoch;
     }
-    return _epgStartTime;
+    return _epgStartTime!;
   }
 
   int _getEpgEndTime() {
     if (_epgEndTime == null) {
       _epgEndTime = DateTime.now().millisecondsSinceEpoch;
     }
-    return _epgEndTime;
+    return _epgEndTime!;
   }
 
   Future<List<Channel>> channels() async {
@@ -96,7 +96,8 @@ class EpgRepository extends Repository{
     return outMap;
   }
 
-  Future<Map<int, List<Show>>> shows({List<int> channels, int startDate, int endDate}) async {
+  Future<Map<int, List<Show>>> shows(
+      {List<int>? channels, int? startDate, int? endDate}) async {
     final String url = 'epg/shows/';
     var responseJson;
     List<Show> showList = [];
@@ -124,9 +125,9 @@ class EpgRepository extends Repository{
     }
 
     final Map<String, dynamic> _payload = {
-      'channelList' : channels,
-      'startDate' : startDate,
-      'endDate' : endDate,
+      'channelList': channels,
+      'startDate': startDate,
+      'endDate': endDate,
     };
 
     responseJson = await provider.post(url, _payload);
@@ -148,13 +149,13 @@ class EpgRepository extends Repository{
     return showFromJson(responseJson['show'], responseJson['channel']);
   }
 
-  Future<Serial> serial(int serialId)  async {
+  Future<Serial> serial(int serialId) async {
     final String url = 'epg/serial/$serialId/';
     var responseJson;
     responseJson = await provider.get(url);
 
-    return serialFromJson(responseJson['serial'], responseJson['channel'], responseJson['episodes']);
-
+    return serialFromJson(responseJson['serial'], responseJson['channel'],
+        responseJson['episodes']);
   }
 
   void setRecording(int showId) {
@@ -198,5 +199,4 @@ class EpgRepository extends Repository{
     final String url = 'epg/bookmark/$showId/';
     provider.delete(url);
   }
-
 }

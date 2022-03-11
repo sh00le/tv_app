@@ -1,8 +1,8 @@
 class DefVodCategory {
-  bool hasRecommendation;
-  String id;
-  String parentId;
-  String title;
+  bool? hasRecommendation;
+  String? id;
+  String? parentId;
+  String? title;
 
   DefVodCategory({this.hasRecommendation, this.id, this.parentId, this.title});
 

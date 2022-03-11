@@ -4,35 +4,35 @@ import 'package:tv_app/models/Image.dart';
 import 'package:tv_app/models/Channel.dart';
 
 class Show {
-    String actors;
-    String ageRating;
-    bool blackout;
-    String buyPrice;
-    String category;
-    String description;
-    String director;
-    DateTime endTime;
-    String episode;
-    String genre;
-    bool isPPV;
-    String season;
-    String seriesId;
-    bool showClientId;
-    int showId;
-    DateTime startTime;
-    String title;
-    bool hasCatchup;
-    bool hasRecording;
-    bool hasReminder;
-    bool hasSeriesRecording;
-    bool userIptvPlayable;
-    bool userLocked;
-    bool userOttPlayable;
-    bool userRecording;
-    bool userReminder;
-    bool userStbPaired;
-    Map<String, Image> images;
-    Channel channel;
+    String? actors;
+    String? ageRating;
+    bool? blackout;
+    String? buyPrice;
+    String? category;
+    String? description;
+    String? director;
+    DateTime? endTime;
+    String? episode;
+    String? genre;
+    bool? isPPV;
+    String? season;
+    String? seriesId;
+    bool? showClientId;
+    int? showId;
+    DateTime? startTime;
+    String? title;
+    bool? hasCatchup;
+    bool? hasRecording;
+    bool? hasReminder;
+    bool? hasSeriesRecording;
+    bool? userIptvPlayable;
+    bool? userLocked;
+    bool? userOttPlayable;
+    bool? userRecording;
+    bool? userReminder;
+    bool? userStbPaired;
+    Map<String, Image>? images;
+    Channel? channel;
 
     Show({
         this.actors, this.ageRating, this.blackout, this.buyPrice, this.category, this.description,
@@ -78,12 +78,12 @@ class Show {
         );
     }
 
-    String imageVariation(String variation, String type) {
-        String outImageUrl;
+    String? imageVariation(String variation, String type) {
+        String? outImageUrl;
         if (this.images != null) {
             String _key = Image.generateKey(variation, type);
-            if (this.images.containsKey(_key)) {
-                outImageUrl = this.images[_key].imageUrl;
+            if (this.images!.containsKey(_key)) {
+                outImageUrl = this.images![_key]!.imageUrl;
             }
         }
         return outImageUrl;
@@ -91,7 +91,7 @@ class Show {
 
     String displayTimeStartToEnd() {
         var todayDay = DateTime.now();
-        if ( startTime.isBefore(todayDay) && todayDay.isBefore(endTime)) {
+        if ( startTime!.isBefore(todayDay) && todayDay.isBefore(endTime!)) {
             return 'NOW';
         } else {
             return '${displayStartTime()} - ${displayEndTime()}';
@@ -100,12 +100,12 @@ class Show {
 
     String displayStartTime() {
         var timeFormat = DateFormat('HH:mm');
-        return '${timeFormat.format(startTime)}';
+        return '${timeFormat.format(startTime!)}';
     }
 
     String displayEndTime() {
         var timeFormat = DateFormat('HH:mm');
-        return '${timeFormat.format(endTime)}';
+        return '${timeFormat.format(endTime!)}';
     }
 
     double showProgress(double width) {
@@ -114,11 +114,11 @@ class Show {
         debugPrint('todayDay $todayDay');
         debugPrint('endTime $endTime');
 
-        if (todayDay.isAfter(endTime) ) {
+        if (todayDay.isAfter(endTime!) ) {
             progress = width;
-        } else if (todayDay.isAfter(startTime)) {
-            var duration = endTime.difference(startTime).inSeconds;
-            var currentProgress = todayDay.difference(startTime).inSeconds;
+        } else if (todayDay.isAfter(startTime!)) {
+            var duration = endTime!.difference(startTime!).inSeconds;
+            var currentProgress = todayDay.difference(startTime!).inSeconds;
             progress = (currentProgress / duration) * width;
         }
         debugPrint('showProgress $progress');
@@ -127,7 +127,7 @@ class Show {
 
     String displayDateDay() {
         String outDay = '';
-        var weekDay = startTime.weekday;
+        var weekDay = startTime!.weekday;
         var todayDay = DateTime.now();
 
         debugPrint('$startTime - $weekDay - ${todayDay.weekday}');
@@ -173,7 +173,7 @@ class Show {
         data['buyPrice'] = this.buyPrice;
         data['category'] = this.category;
         data['description'] = this.description;
-        data['endTime'] = this.endTime.millisecondsSinceEpoch / 1000;
+        data['endTime'] = this.endTime!.millisecondsSinceEpoch / 1000;
         data['episode'] = this.episode;
         data['genre'] = this.genre;
         data['hasCatchup'] = this.hasCatchup;
@@ -184,7 +184,7 @@ class Show {
         data['season'] = this.season;
         data['seriesId'] = this.seriesId;
         data['showId'] = this.showId;
-        data['startTime'] = this.startTime.millisecondsSinceEpoch / 1000;
+        data['startTime'] = this.startTime!.millisecondsSinceEpoch / 1000;
         data['title'] = this.title;
         data['userIptvPlayable'] = this.userIptvPlayable;
         data['userLocked'] = this.userLocked;
@@ -199,7 +199,7 @@ class Show {
             // data['images'] = this.images.map((v) => v.toJson()).toList();
         }
         if (this.channel != null) {
-            data['channel'] = this.channel.toJson();
+            data['channel'] = this.channel!.toJson();
         }
 
         return data;

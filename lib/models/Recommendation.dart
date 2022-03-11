@@ -7,9 +7,9 @@ import 'package:tv_app/models/VodMovie.dart';
 import 'package:tv_app/models/VodSerial.dart';
 
 class Recommendation {
-  String id;
-  String title;
-  List<dynamic> recommendations;
+  String? id;
+  String? title;
+  List<dynamic>? recommendations;
 
   Recommendation({this.id, this.title, this.recommendations});
 
@@ -20,20 +20,29 @@ class Recommendation {
         switch (recommendation['contentType']) {
           case 'PPV':
           case 'PROGRAM':
-
             var showJson = recommendation;
-            showJson['showId'] = showJson['showId'] != null ? showJson['showId'] : showJson['contentId'];
-            showJson['startTime'] = showJson['startTime'] != null ? showJson['startTime'] : recommendation["additional"]["startTime"];
-            showJson['endTime'] = showJson['endTime'] != null ? showJson['endTime'] : recommendation["additional"]["endTime"];
-            showJson['channel'] = showJson['channel'] != null ? showJson['channel'] : recommendation["additional"];
-            showJson['channel']['title'] = showJson['channel']['title'] != null ? showJson['channel']['title'] : recommendation["additional"]['channelTitle'];
+            showJson['showId'] = showJson['showId'] != null
+                ? showJson['showId']
+                : showJson['contentId'];
+            showJson['startTime'] = showJson['startTime'] != null
+                ? showJson['startTime']
+                : recommendation["additional"]["startTime"];
+            showJson['endTime'] = showJson['endTime'] != null
+                ? showJson['endTime']
+                : recommendation["additional"]["endTime"];
+            showJson['channel'] = showJson['channel'] != null
+                ? showJson['channel']
+                : recommendation["additional"];
+            showJson['channel']['title'] = showJson['channel']['title'] != null
+                ? showJson['channel']['title']
+                : recommendation["additional"]['channelTitle'];
             recommendationsList.add(Show.fromJson(showJson));
 
             break;
           case 'VIDEO_VOD':
-
             var vodJson = recommendation;
-            vodJson['id'] = vodJson['id'] != null ? vodJson['id'] : vodJson['contentId'];
+            vodJson['id'] =
+                vodJson['id'] != null ? vodJson['id'] : vodJson['contentId'];
             if (vodJson['serialId'] != "") {
               if (vodJson['serialId'] == vodJson['id']) {
                 recommendationsList.add(VodSerial.fromJson(vodJson, []));
@@ -46,11 +55,11 @@ class Recommendation {
 
             break;
           case 'VIDEO_SVOD':
-
             var svodJson = recommendation;
-            svodJson['id'] = svodJson['id'] != null ? svodJson['id'] : svodJson['contentId'];
+            svodJson['id'] =
+                svodJson['id'] != null ? svodJson['id'] : svodJson['contentId'];
             if (svodJson['serialId'] != "") {
-              if(svodJson['serialId'] == svodJson['id']) {
+              if (svodJson['serialId'] == svodJson['id']) {
                 recommendationsList.add(SvodSerial.fromJson(svodJson, []));
               } else {
                 recommendationsList.add(SvodEpisode.fromJson(svodJson));
@@ -61,14 +70,12 @@ class Recommendation {
 
             break;
         }
-
       }
     }
     return Recommendation(
-      id: json['id'],
-      title: json['title'],
-      recommendations: recommendationsList
-    );
+        id: json['id'],
+        title: json['title'],
+        recommendations: recommendationsList);
   }
 
   Map<String, dynamic> toJson() {
@@ -76,7 +83,9 @@ class Recommendation {
     data['id'] = this.id;
     data['title'] = this.title;
     if (this.recommendations != null) {
-      data['recommendations'] = this.recommendations.map((v) => v.toJson()).toList();
+      data['recommendations'] =
+          this.recommendations!.map((v) => v.toJson()).toList();
     }
+    return data;
   }
 }

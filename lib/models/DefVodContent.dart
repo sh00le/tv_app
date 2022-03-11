@@ -2,32 +2,32 @@ import 'package:flutter/foundation.dart';
 import 'package:tv_app/models/Image.dart';
 
 class DefVodContent {
-  String actors;
-  String ageRating;
-  int buyDuration;
-  String buyPrice;
-  List<String> categories;
-  String description;
-  String director;
-  int duration;
-  int expirationTimestamp;
-  String genre;
-  bool hasTrailer;
-  String id;
-  Map<String, Image> images;
-  int licenceExpiration;
-  String originalTitle;
-  String serialId;
-  String starRating;
-  String title;
-  int userBookmarkPercentage;
-  bool userFavorite;
-  bool userLocked;
-  bool userOttPlayable;
-  bool userPurchasable;
-  bool userPurchasePinRequired;
-  bool watched;
-  String year;
+  String? actors;
+  String? ageRating;
+  int? buyDuration;
+  String? buyPrice;
+  List<String>? categories;
+  String? description;
+  String? director;
+  int? duration;
+  int? expirationTimestamp;
+  String? genre;
+  bool? hasTrailer;
+  String? id;
+  Map<String, Image>? images;
+  int? licenceExpiration;
+  String? originalTitle;
+  String? serialId;
+  String? starRating;
+  String? title;
+  int? userBookmarkPercentage;
+  bool? userFavorite;
+  bool? userLocked;
+  bool? userOttPlayable;
+  bool? userPurchasable;
+  bool? userPurchasePinRequired;
+  bool? watched;
+  String? year;
 
   DefVodContent({this.actors, this.ageRating, this.buyDuration, this.buyPrice, this.categories,
     this.description, this.director, this.duration, this.expirationTimestamp,
@@ -36,12 +36,12 @@ class DefVodContent {
     this.userFavorite, this.userLocked, this.userOttPlayable, this.userPurchasable,
     this.userPurchasePinRequired, this.watched, this.year});
 
-  String imageVariation(String variation, String type) {
-    String outImageUrl;
-    if (this.images != null && this.images.isNotEmpty) {
+  String? imageVariation(String variation, String type) {
+    String? outImageUrl;
+    if (this.images != null && this.images!.isNotEmpty) {
       String _key = Image.generateKey(variation, type);
-      if (this.images.containsKey(_key)) {
-        outImageUrl = this.images[_key].imageUrl;
+      if (this.images!.containsKey(_key)) {
+        outImageUrl = this.images![_key]!.imageUrl;
       }
     }
 
@@ -52,8 +52,8 @@ class DefVodContent {
     String formattedDuration = '';
     debugPrint('duration $duration');
     int minInHour = 60;
-    int hours = duration ~/ minInHour;
-    int minutes = duration % minInHour;
+    int hours = duration! ~/ minInHour;
+    int minutes = duration! % minInHour;
     if (hours > 0) {
       formattedDuration = '${hours}h ';
     }
@@ -62,8 +62,8 @@ class DefVodContent {
   }
 
   String displayPrice() {
-    if ( double.parse(buyPrice) > 0 ) {
-      return buyPrice + '€';
+    if ( double.parse(buyPrice!) > 0 ) {
+      return buyPrice! + '€';
     } else {
       return '';
     }

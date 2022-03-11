@@ -7,14 +7,14 @@ import 'package:tv_app/repository/epg_repository.dart';
 import 'package:tv_app/services/repository_service.dart';
 
 class Action {
-  String id;
-  String title;
+  String? id;
+  String? title;
 }
 
 class ActionStatus {
   static String _id = 'actions';
   FocusScopeNode focusNode = FocusScopeNode();
-  FocusAttachment attachment;
+  FocusAttachment? attachment;
   String get id => _id;
   List<Action> actions = [];
 }
@@ -25,7 +25,6 @@ class ContentStatus {
   String get id => _id;
   var data;
 }
-
 
 class ShowDetailsStatus {
   static String _id = 'show';
@@ -39,14 +38,12 @@ class ShowDetailsStatus {
   }
 }
 
-
 class ShowDetailsPageController extends GetxController {
   final RepositoryService _repositoryService = Get.find<RepositoryService>();
   final ShowDetailsStatus showDetailsStatus = ShowDetailsStatus.init();
-  Show show;
+  Show? show;
 
   void init() {
-
     // Prepare Content actions
     prepareActions();
 
@@ -57,22 +54,21 @@ class ShowDetailsPageController extends GetxController {
     EpgRepository _epgRepository = _repositoryService.getEpg();
     if (showId != -1) {
       show = await _epgRepository.show(showId);
-      debugPrint('${show.title}');
+      debugPrint('${show!.title!}');
       update([showDetailsStatus.id]);
     }
   }
 
   void onActionSubmit(Action action) {
-    switch(action.id) {
+    switch (action.id) {
       case 'back':
         Get.back(result: true);
         break;
       default:
-        Get.snackbar(action.title, '', snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(action.title!, '', snackPosition: SnackPosition.BOTTOM);
         break;
     }
   }
-
 
   void prepareActions() {
     debugPrint('prepareActions');
@@ -106,7 +102,5 @@ class ShowDetailsPageController extends GetxController {
     _back.id = 'back';
     _back.title = 'Back';
     showDetailsStatus.action.actions.add(_back);
-
   }
-
 }

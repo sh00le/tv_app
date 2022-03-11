@@ -12,10 +12,10 @@ import 'package:tv_app/widgets/content_list/svodListItem.dart';
 import 'package:tv_app/widgets/content_list/svodSerialListItem.dart';
 import 'package:tv_app/widgets/content_list/vodSerialListItem.dart';
 
-
 /// Content List item widget - detecting which content widget is needed to display on screen
 class ContentListItem extends StatelessWidget {
-  ContentListItem({Key key, this.item, this.selected}) : super(key: key);
+  ContentListItem({Key? key, this.item, required this.selected})
+      : super(key: key);
   final dynamic item;
   final bool selected;
 
@@ -25,8 +25,9 @@ class ContentListItem extends StatelessWidget {
       width: 117,
       height: 170,
       decoration: BoxDecoration(
-          border: selected ? Border.all(width: 3, color: Colors.white) : Border.all(width: 3, color: Colors.transparent)
-      ),
+          border: selected
+              ? Border.all(width: 3, color: Colors.white)
+              : Border.all(width: 3, color: Colors.transparent)),
       margin: EdgeInsets.only(left: 2, right: 2),
       child: getContentWidget(),
     );

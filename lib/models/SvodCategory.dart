@@ -1,7 +1,7 @@
 import 'package:tv_app/models/DefVodCategory.dart';
 
 class SvodCategory extends DefVodCategory{
-  SvodCategory({bool hasRecommendation, String id, String parentId, String title}) : super(
+  SvodCategory({bool? hasRecommendation, String? id, String? parentId, String? title}) : super(
       hasRecommendation: hasRecommendation,
       id: id,
       parentId: parentId,

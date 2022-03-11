@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 
@@ -19,39 +17,31 @@ import 'package:tv_app/repository/recommendation_repository.dart';
 import 'package:tv_app/services/repository_service.dart';
 import 'package:tv_app/widgets/tv_infinity_scroll.dart';
 
-enum Widgets{
-  menu,
-  recommendations,
-  contentInfo
-}
+enum Widgets { menu, recommendations, contentInfo }
 
-enum Status{
-  loading,
-  hidden,
-  visible
-}
+enum Status { loading, hidden, visible }
 
 class MenuStatus {
   static String _id = 'menu';
   FocusScopeNode focusScopeNode = FocusScopeNode();
-  FocusAttachment attachment;
+  FocusAttachment? attachment;
   String get id => _id;
 }
 
-class RecommendationsStatus{
+class RecommendationsStatus {
   static String _id = 'recommendations';
   FocusScopeNode focusScopeNode = FocusScopeNode();
-  FocusAttachment attachment;
-  Status widgetStatus;
-  List data;
+  FocusAttachment? attachment;
+  Status? widgetStatus;
+  List? data;
   String get id => _id;
 }
 
-class DetailsStatus{
+class DetailsStatus {
   static String _id = 'details';
   FocusScopeNode focusScopeNode = FocusScopeNode();
-  FocusAttachment attachment;
-  Status widgetStatus;
+  FocusAttachment? attachment;
+  Status? widgetStatus;
   var data;
   String get id => _id;
 }
@@ -61,8 +51,7 @@ class HomeStatus {
   final RecommendationsStatus recommendations = RecommendationsStatus();
   final DetailsStatus details = DetailsStatus();
 
-
-  HomeStatus.init(){
+  HomeStatus.init() {
     recommendations.widgetStatus = Status.hidden;
     recommendations.data = [];
     details.widgetStatus = Status.hidden;
@@ -71,40 +60,46 @@ class HomeStatus {
 }
 
 class HomeController extends GetxController {
-  final TVInfiniteScrollController _menuListController = TVInfiniteScrollController();
-  TVInfiniteScrollController _recoListController = TVInfiniteScrollController();
+  final TVInfiniteScrollController _menuListController =
+      TVInfiniteScrollController();
+  TVInfiniteScrollController? _recoListController =
+      TVInfiniteScrollController();
 
   final RepositoryService _repositoryService = Get.find<RepositoryService>();
   final HomeStatus homeStatus = HomeStatus.init();
   bool _isScrolling = false;
-  Menu _selectedMenuItem;
+  Menu? _selectedMenuItem;
 
   var items = [];
 
   void init(BuildContext context) {
     debugPrint('INIT!!!');
-    homeStatus.menu.attachment = homeStatus.menu.focusScopeNode.attach(context, onKey: _handleKeyEvent);
-    homeStatus.recommendations.attachment = homeStatus.recommendations.focusScopeNode.attach(context, onKey: _handleKeyEvent);
-    homeStatus.details.attachment = homeStatus.details.focusScopeNode.attach(context, onKey: _handleKeyEvent);
+    homeStatus.menu.attachment =
+        homeStatus.menu.focusScopeNode.attach(context, onKey: _handleKeyEvent);
+    homeStatus.recommendations.attachment = homeStatus
+        .recommendations.focusScopeNode
+        .attach(context, onKey: _handleKeyEvent);
+    homeStatus.details.attachment = homeStatus.details.focusScopeNode
+        .attach(context, onKey: _handleKeyEvent);
     homeStatus.menu.focusScopeNode.requestFocus();
 
     // debugPrint('homeStatus.menu.focusScopeNode.hasFocus ${homeStatus.menu.focusScopeNode.hasFocus}');
   }
 
-  bool _handleKeyEvent(FocusNode node, RawKeyEvent event) {
+  KeyEventResult _handleKeyEvent(FocusNode node, RawKeyEvent event) {
     if (event is RawKeyDownEvent) {
       if (node == homeStatus.recommendations.focusScopeNode) {
         if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-          _recoListController.prevItem();
+          _recoListController?.prevItem();
         }
         if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-          _recoListController.nextItem();
+          _recoListController?.nextItem();
         }
 
-        if (event.logicalKey == LogicalKeyboardKey.select || event.logicalKey == LogicalKeyboardKey.enter) {
+        if (event.logicalKey == LogicalKeyboardKey.select ||
+            event.logicalKey == LogicalKeyboardKey.enter) {
           _handleNavigation();
         }
-
       }
       if (node == homeStatus.menu.focusScopeNode) {
         if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
@@ -123,7 +118,11 @@ class HomeController extends GetxController {
           homeStatus.recommendations.focusScopeNode.requestFocus();
 
           homeStatus.details.widgetStatus = Status.visible;
-          update([homeStatus.menu.id, homeStatus.recommendations.id, homeStatus.details.id]);
+          update([
+            homeStatus.menu.id,
+            homeStatus.recommendations.id,
+            homeStatus.details.id
+          ]);
         }
       }
 
@@ -137,30 +136,40 @@ class HomeController extends GetxController {
           homeStatus.menu.focusScopeNode.requestFocus();
 
           homeStatus.details.widgetStatus = Status.hidden;
-          update([homeStatus.menu.id, homeStatus.recommendations.id, homeStatus.details.id]);
+          update([
+            homeStatus.menu.id,
+            homeStatus.recommendations.id,
+            homeStatus.details.id
+          ]);
         }
       }
     }
 
-    return true;
+    return KeyEventResult.handled;
   }
 
   TVInfiniteScrollController get menuController => _menuListController;
-  TVInfiniteScrollController get recoController => _recoListController;
+  TVInfiniteScrollController get recoController => _recoListController!;
 
   void _handleNavigation() {
     if (homeStatus.details.data is VodMovie) {
-      Get.toNamed('/vod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'vod' });
+      Get.toNamed('/vod/movie',
+          arguments: {'movieId': homeStatus.details.data.id, 'type': 'vod'});
     } else if (homeStatus.details.data is VodSerial) {
-      Get.toNamed('/vod/serial', arguments: { 'serialId':homeStatus.details.data.id, 'type': 'vod' });
+      Get.toNamed('/vod/serial',
+          arguments: {'serialId': homeStatus.details.data.id, 'type': 'vod'});
     } else if (homeStatus.details.data is VodEpisode) {
-      Get.toNamed('/vod/episode', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'vod' });
+      Get.toNamed('/vod/episode',
+          arguments: {'movieId': homeStatus.details.data.id, 'type': 'vod'});
     } else if (homeStatus.details.data is SvodMovie) {
-      Get.toNamed('/svod/movie', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'svod' });
+      Get.toNamed('/svod/movie',
+          arguments: {'movieId': homeStatus.details.data.id, 'type': 'svod'});
     } else if (homeStatus.details.data is SvodSerial) {
-      Get.toNamed('/svod/serial', arguments: { 'serialId':homeStatus.details.data.id, 'type': 'svod' });
+      Get.toNamed('/svod/serial',
+          arguments: {'serialId': homeStatus.details.data.id, 'type': 'svod'});
     } else if (homeStatus.details.data is SvodEpisode) {
-      Get.toNamed('/svod/episode', arguments: { 'movieId':homeStatus.details.data.id, 'type': 'svod' });
+      Get.toNamed('/svod/episode',
+          arguments: {'movieId': homeStatus.details.data.id, 'type': 'svod'});
     } else if (homeStatus.details.data is Show) {
       Get.toNamed('/epg/show', arguments: homeStatus.details.data.showId);
     }
@@ -205,8 +214,9 @@ class HomeController extends GetxController {
   }
 
   Future<void> _getRecommendations(Menu menuItem) async {
-    RecommendationRepository _recoRepository = _repositoryService.getRecommendation();
-    List<Recommendation> _recommendations;
+    RecommendationRepository _recoRepository =
+        _repositoryService.getRecommendation();
+    List<Recommendation>? _recommendations;
 
     if (_selectedMenuItem != menuItem) {
       _selectedMenuItem = menuItem;
@@ -241,11 +251,11 @@ class HomeController extends GetxController {
       homeStatus.recommendations.data = [];
     }
 
-    if (homeStatus.recommendations.data != null && homeStatus.recommendations.data.isNotEmpty) {
-      homeStatus.details.data = homeStatus.recommendations.data.first;
+    if (homeStatus.recommendations.data != null &&
+        homeStatus.recommendations.data!.isNotEmpty) {
+      homeStatus.details.data = homeStatus.recommendations.data!.first;
     } else {
       homeStatus.details.data = null;
     }
-
   }
 }

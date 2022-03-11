@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
 class Image {
-    String imageType;
-    String imageUrl;
-    String variation;
+    String? imageType;
+    String? imageUrl;
+    String? variation;
 
     Image({this.imageType, this.imageUrl, this.variation});
 
@@ -17,7 +17,7 @@ class Image {
         );
     }
 
-    static String generateKey(String variation, String type) {
+    static String generateKey(String? variation, String? type) {
         return '$variation-$type';
     }
 

@@ -10,14 +10,14 @@ class ApiProvider {
   // Stage
   // final String _baseUrl = 'https://player.maxtvtogo.tportal.hr:8086/OTT4Proxy/proxy/';
   // Production
-  final String _baseUrl = 'https://player.maxtvtogo.tportal.hr:8082/OTT4Proxy/proxy/';
+  final String _baseUrl =
+      'https://player.maxtvtogo.tportal.hr:8082/OTT4Proxy/proxy/';
   final Map<String, String> _headers = {
-    'Content-type' : 'application/json; charset=UTF-8',
+    'Content-type': 'application/json; charset=UTF-8',
     'Accept': 'application/json',
   };
 
   ApiProvider();
-
 
   ///
   /// GET API request
@@ -26,7 +26,7 @@ class ApiProvider {
     var responseJson;
 
     try {
-      final response = await http.get(_baseUrl + url, headers: _headers);
+      final response = await http.get(_generateUri(url), headers: _headers);
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -35,13 +35,18 @@ class ApiProvider {
     return responseJson;
   }
 
+  Uri _generateUri(String url) {
+    return Uri.parse(_baseUrl + url);
+  }
+
   ///
   /// POST API request
   ///
   Future<dynamic> post(String url, Map<String, dynamic> body) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url, body: json.encode(body), headers: _headers);
+      final response = await http.post(_generateUri(url),
+          body: json.encode(body), headers: _headers);
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -53,15 +58,16 @@ class ApiProvider {
   ///
   /// PUT API request
   ///
-  Future<dynamic> put(String url, {Map<String, String> body}) async {
+  Future<dynamic> put(String url, {Map<String, String>? body}) async {
     var responseJson;
 
     try {
       var response;
       if (body != null) {
-        response = await http.put(_baseUrl + url, body: json.encode(body), headers: _headers);
+        response = await http.put(_generateUri(url),
+            body: json.encode(body), headers: _headers);
       } else {
-        response = await http.put(_baseUrl + url, headers: _headers);
+        response = await http.put(_generateUri(url), headers: _headers);
       }
 
       responseJson = _response(response);
@@ -79,7 +85,7 @@ class ApiProvider {
     var responseJson;
 
     try {
-      final response = await http.delete(_baseUrl + url, headers: _headers);
+      final response = await http.delete(_generateUri(url), headers: _headers);
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -87,7 +93,6 @@ class ApiProvider {
 
     return responseJson;
   }
-
 
   ///
   ///  Handle API response
@@ -107,7 +112,8 @@ class ApiProvider {
         throw UnauthorisedException(body);
         break;
       default:
-        throw FetchDataException('Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+        throw FetchDataException(
+            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
         break;
     }
   }

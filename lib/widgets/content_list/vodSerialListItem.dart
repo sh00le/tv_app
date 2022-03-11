@@ -3,8 +3,8 @@ import 'package:tv_app/widgets/image_network/imageNetwork.dart';
 import 'package:tv_app/models/DefVodSerial.dart';
 
 /// VOD content item with content image and show title
-class VodSerialListItem extends StatefulWidget{
-  VodSerialListItem({Key key, this.item}) : super(key: key);
+class VodSerialListItem extends StatefulWidget {
+  VodSerialListItem({Key? key, required this.item}) : super(key: key);
 
   final DefVodSerial item;
 
@@ -13,13 +13,15 @@ class VodSerialListItem extends StatefulWidget{
 }
 
 class _VodSerialListItemState extends State<VodSerialListItem> {
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Expanded(
-          child: ImageNetwork(url: this.widget.item.imageVariation('M', 'poster'), type: 'poster', variation: 'M'),
+          child: ImageNetwork(
+              url: this.widget.item.imageVariation('M', 'poster')!,
+              type: 'poster',
+              variation: 'M'),
         ),
       ],
     );

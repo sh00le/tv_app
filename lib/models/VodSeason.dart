@@ -4,14 +4,14 @@ import 'package:tv_app/models/VodEpisode.dart';
 import 'package:tv_app/models/VodMovie.dart';
 
 class VodSeason extends DefVodSeason {
-    Map<String, Image> images;
-    List<VodEpisode> episodes;
-    String externalCode;
-    String id;
-    String originalTitle;
-    String title;
-    int userBookmarkPercentage;
-    bool userLocked;
+    Map<String, Image>? images;
+    List<VodEpisode>? episodes;
+    String? externalCode;
+    String? id;
+    String? originalTitle;
+    String? title;
+    int? userBookmarkPercentage;
+    bool? userLocked;
 
     VodSeason({this.episodes, this.externalCode, this.id, this.images, this.originalTitle, this.title, this.userBookmarkPercentage, this.userLocked});
 
@@ -38,7 +38,7 @@ class VodSeason extends DefVodSeason {
         data['userBookmarkPercentage'] = this.userBookmarkPercentage;
         data['userLocked'] = this.userLocked;
         if (this.episodes != null) {
-            data['episodes'] = this.episodes.map((v) => v.toJson()).toList();
+            data['episodes'] = this.episodes!.map((v) => v.toJson()).toList();
         }
         // if (this.images != null) {
         //     data['images'] = this.images.map((v) => v.toJson()).toList();
