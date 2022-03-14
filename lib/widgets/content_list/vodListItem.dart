@@ -4,7 +4,7 @@ import 'package:tv_app/models/DefVodContent.dart';
 
 /// VOD content item with content image and show title
 class VodListItem extends StatefulWidget {
-  VodListItem({Key? key, required this.item}) : super(key: key!);
+  VodListItem({Key? key, required this.item}) : super(key: key);
 
   final DefVodContent item;
 

@@ -208,11 +208,11 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
   }
 
   /// Calculate index of selected item
-  int _calculateSelectedIndex() {
+  int? _calculateSelectedIndex() {
     if (_selectedIndex != null) {
       return (_selectedIndex! + widget.selectedItemIndex!);
     } else {
-      return _selectedIndex!;
+      return _selectedIndex;
     }
   }
 
@@ -222,9 +222,9 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
       _previousSelectedIndex = _selectedIndex!;
       if (widget.loop) {
         widget.onItemSelected
-            ?.call(_recalculateIndex(_calculateSelectedIndex()));
+            ?.call(_recalculateIndex(_calculateSelectedIndex()!));
       } else {
-        widget.onItemSelected?.call(_calculateSelectedIndex());
+        widget.onItemSelected?.call(_calculateSelectedIndex()!);
       }
     } else {
       widget.onItemSelected?.call(_selectedIndex!);
@@ -232,8 +232,8 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
   }
 
   /// Recalculate item index if loop option is set
-  int _recalculateIndex(int index) {
-    int outIndex = index;
+  int _recalculateIndex(int? index) {
+    int outIndex = index!;
     if (widget.loop == true) {
       if (widget.itemCount != null && widget.itemCount > 0) {
         outIndex = index % widget.itemCount;
