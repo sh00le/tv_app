@@ -11,17 +11,17 @@ class CustomException implements Exception {
 
 
 class FetchDataException extends CustomException {
-  FetchDataException([String message]) : super(message, "Error During Communication: ");
+  FetchDataException([String? message]) : super(message, "Error During Communication: ");
 }
 
 class BadRequestException extends CustomException {
-  BadRequestException([String message]) : super(message, "Invalid Request: ");
+  BadRequestException([String? message]) : super(message, "Invalid Request: ");
 }
 
 class UnauthorisedException extends CustomException {
-  UnauthorisedException([String message]) : super(message, "Unauthorised: ");
+  UnauthorisedException([String? message]) : super(message, "Unauthorised: ");
 }
 
 class InvalidInputException extends CustomException {
-  InvalidInputException([String message]) : super(message, "Invalid Input: ");
+  InvalidInputException([String? message]) : super(message, "Invalid Input: ");
 }

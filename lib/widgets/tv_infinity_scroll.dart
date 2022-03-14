@@ -10,7 +10,7 @@ class TVInfiniteListView extends StatefulWidget {
   final Widget Function(BuildContext, int, bool) itemBuilder;
 
   /// See: [ScrollView.controller]
-  final TVInfiniteScrollController controller;
+  final TVInfiniteScrollController? controller;
 
   /// List direction
   ///
@@ -32,7 +32,7 @@ class TVInfiniteListView extends StatefulWidget {
   final double anchor;
 
   /// Proxy property for [RenderViewportBase.cacheExtent]
-  final double cacheExtent;
+  final double? cacheExtent;
 
   /// Scroll direction
   ///
@@ -59,68 +59,63 @@ class TVInfiniteListView extends StatefulWidget {
   final bool loop;
 
   /// Snap to item
-  final bool itemSnapping;
+  final bool? itemSnapping;
 
   /// index of selected item
   /// - index 0 for first visible items
-  final int selectedItemIndex;
+  final int? selectedItemIndex;
 
   ///Animation curve
-  final Curve curve;
+  final Curve? curve;
 
   ///Animation duration in milliseconds (ms)
-  final int duration;
+  final int? duration;
 
   ///Callback function when list snaps/focuses to an item
-  final void Function(int) onItemSelected;
+  final void Function(int)? onItemSelected;
 
   ///Callback function when list snaps/focuses to an item
-  final void Function(int) onItemFocus;
+  final void Function(int)? onItemFocus;
 
   ///Callback function when list start scrolling
-  final void Function() onScrollStart;
+  final void Function()? onScrollStart;
 
   ///Callback function when list end scrolling
-  final void Function() onScrollEnd;
+  final void Function()? onScrollEnd;
 
-
-  TVInfiniteListView({
-    Key key,
-    @required this.itemBuilder,
-
-    this.direction = InfiniteListDirection.multi,
-    TVInfiniteScrollController controller,
-    @required this.loop,
-    this.itemSnapping = true,
-    this.selectedItemIndex = 0,
-    this.curve = Curves.ease,
-    this.duration = 500,
-    this.itemCount,
-    @required this.itemSize,
-    this.anchor = 0.0,
-    this.cacheExtent,
-    this.scrollDirection = Axis.horizontal,
-    this.onItemSelected,
-    this.onItemFocus,
-    this.onScrollStart,
-    this.onScrollEnd
-  })  : controller = controller ?? TVInfiniteScrollController(),
+  TVInfiniteListView(
+      {Key? key,
+      required this.itemBuilder,
+      this.direction = InfiniteListDirection.multi,
+      TVInfiniteScrollController? controller,
+      required this.loop,
+      this.itemSnapping = true,
+      this.selectedItemIndex = 0,
+      this.curve = Curves.ease,
+      this.duration = 500,
+      required this.itemCount,
+      required this.itemSize,
+      this.anchor = 0.0,
+      this.cacheExtent,
+      this.scrollDirection = Axis.horizontal,
+      this.onItemSelected,
+      this.onItemFocus,
+      this.onScrollStart,
+      this.onScrollEnd})
+      : controller = controller ?? TVInfiniteScrollController(),
         super(key: key);
 
   @override
   _TVInfiniteListViewState createState() => _TVInfiniteListViewState();
-
 }
-
 
 class TVInfiniteScrollController extends ScrollController {
   @protected
   double itemSize = 1;
   final Duration _scrollAnimationDuration = Duration(milliseconds: 500);
-  final Curve _scrollCurve = Curves.linearToEaseOut ;
+  final Curve _scrollCurve = Curves.linearToEaseOut;
   double _offset = 0;
-  String _name;
-
+  String? _name;
 
   @protected
   void setItemSize(double size) {
@@ -138,7 +133,7 @@ class TVInfiniteScrollController extends ScrollController {
   }
 
   String getName() {
-    return _name;
+    return _name!;
   }
 
   /// Scroll to previous item
@@ -146,7 +141,8 @@ class TVInfiniteScrollController extends ScrollController {
     double newOffset = _offset - itemSize;
     if (newOffset >= position.minScrollExtent) {
       _offset = newOffset;
-      animateTo((_offset), duration: _scrollAnimationDuration, curve: _scrollCurve);
+      animateTo((_offset),
+          duration: _scrollAnimationDuration, curve: _scrollCurve);
     }
   }
 
@@ -156,17 +152,16 @@ class TVInfiniteScrollController extends ScrollController {
     if (newOffset <= position.maxScrollExtent) {
       _offset = newOffset;
       // debugPrint('nextItem after: _offset $_offset itemSize: $itemSize');
-      animateTo((_offset), duration: _scrollAnimationDuration, curve: _scrollCurve);
-
+      animateTo((_offset),
+          duration: _scrollAnimationDuration, curve: _scrollCurve);
     }
     // jumpTo(_offset);
   }
 }
 
 class _TVInfiniteListViewState extends State<TVInfiniteListView> {
-
   /// Max child count for positive direction list
-  int posChildCount;
+  int? posChildCount;
 
   /// Max child count for negative list direction
   ///
@@ -174,10 +169,9 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
   ///
   /// This value should have negative value in order to provide right calculation
   /// for negative list
-  int negChildCount;
+  int? negChildCount;
 
-
-  int _selectedIndex = 0;
+  int? _selectedIndex = 0;
   int _previousSelectedIndex = -1;
   bool _addFakeItems = false;
 
@@ -185,14 +179,16 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
     /// Check if fake items are needed
     /// Fake items are used so that all items could be scrolled to selectedItemIndex position
 
-    if (widget.itemCount != null && widget.selectedItemIndex != null && widget.loop != true) {
+    if (widget.itemCount != null &&
+        widget.selectedItemIndex != null &&
+        widget.loop != true) {
       _addFakeItems = true;
       posChildCount = widget.itemCount;
     }
 
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.controller.setItemSize(widget.itemSize);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      widget.controller!.setItemSize(widget.itemSize);
       _selectedIndex = 0;
       _previousSelectedIndex = -1;
       _setSelectedItem();
@@ -200,19 +196,21 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
   }
 
   /// Calculate offset needed for snapping to item
-  double _calcItemPosition({double pixel, @required double itemSize, int index})  {
+  double _calcItemPosition(
+      {required double pixel, required double itemSize, int? index}) {
     double _offset = 0.0;
-    _selectedIndex = index != null ? index : ((pixel - itemSize / 2) / itemSize).ceil();
-    if (widget.itemSnapping) {
-      _offset = _selectedIndex * itemSize;
+    _selectedIndex =
+        index != null ? index : ((pixel - itemSize / 2) / itemSize).ceil();
+    if (widget.itemSnapping!) {
+      _offset = _selectedIndex! * itemSize;
     }
     return _offset;
   }
 
   /// Calculate index of selected item
-  int _calculateSelectedIndex() {
+  int? _calculateSelectedIndex() {
     if (_selectedIndex != null) {
-      return (_selectedIndex + widget.selectedItemIndex);
+      return (_selectedIndex! + widget.selectedItemIndex!);
     } else {
       return _selectedIndex;
     }
@@ -221,20 +219,21 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
   /// Set Selected index
   void _setSelectedItem() {
     if (_selectedIndex != _previousSelectedIndex) {
-      _previousSelectedIndex = _selectedIndex;
+      _previousSelectedIndex = _selectedIndex!;
       if (widget.loop) {
-        widget.onItemSelected?.call( _recalculateIndex(_calculateSelectedIndex()) );
+        widget.onItemSelected
+            ?.call(_recalculateIndex(_calculateSelectedIndex()!));
       } else {
-        widget.onItemSelected?.call( _calculateSelectedIndex() );
+        widget.onItemSelected?.call(_calculateSelectedIndex()!);
       }
     } else {
-      widget.onItemSelected?.call( _selectedIndex );
+      widget.onItemSelected?.call(_selectedIndex!);
     }
   }
 
   /// Recalculate item index if loop option is set
-  int _recalculateIndex(int index) {
-    int outIndex = index;
+  int _recalculateIndex(int? index) {
+    int outIndex = index!;
     if (widget.loop == true) {
       if (widget.itemCount != null && widget.itemCount > 0) {
         outIndex = index % widget.itemCount;
@@ -249,18 +248,18 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
   /// Scroll list to an offset - after finished animation call onItemSelected callback
   void _animateSnapScroll(double location) {
     Future.delayed(Duration.zero, () {
-      widget.controller.animateTo(
+      widget.controller!
+          .animateTo(
         location,
-        duration: new Duration(milliseconds: widget.duration),
-        curve: widget.curve,
-      ).then( (_) {
+        duration: new Duration(milliseconds: widget.duration!),
+        curve: widget.curve!,
+      )
+          .then((_) {
         _setSelectedItem();
         setState(() {});
-      }
-      );
+      });
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -269,79 +268,86 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
 
     return LayoutBuilder(
         builder: (BuildContext ctx, BoxConstraints constraint) {
-
-          /// Adding fake items in order to scroll to selected index position
-          if (_addFakeItems) {
-            _posFakeItemSize = (widget.scrollDirection == Axis.horizontal
+      /// Adding fake items in order to scroll to selected index position
+      if (_addFakeItems) {
+        _posFakeItemSize = (widget.scrollDirection == Axis.horizontal
                 ? constraint.maxWidth
-                : constraint.maxHeight) - (widget.selectedItemIndex + 1) * widget.itemSize;
-            _negFakeItemSize = widget.selectedItemIndex * widget.itemSize;
+                : constraint.maxHeight) -
+            (widget.selectedItemIndex! + 1) * widget.itemSize;
+        _negFakeItemSize = widget.selectedItemIndex! * widget.itemSize;
+      }
+      return NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo is ScrollStartNotification) {
+            Future.delayed(Duration.zero, () {
+              widget.onScrollStart?.call();
+              setState(() {
+                _selectedIndex = null;
+              });
+            });
           }
-          return NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollInfo) {
-              if (scrollInfo is ScrollStartNotification) {
-                Future.delayed(Duration.zero, () {
-                  widget.onScrollStart?.call();
-                  setState(() {
-                    _selectedIndex = null;
-                  });
-                });
-              }
-              if (scrollInfo is ScrollEndNotification) {
-                widget.onScrollEnd?.call();
+          if (scrollInfo is ScrollEndNotification) {
+            widget.onScrollEnd?.call();
 
-                //snap to item
-                double offset = _calcItemPosition(
-                  pixel: scrollInfo.metrics.pixels,
-                  itemSize: widget.itemSize,
-                );
+            //snap to item
+            double offset = _calcItemPosition(
+              pixel: scrollInfo.metrics.pixels,
+              itemSize: widget.itemSize,
+            );
 
-                //only animate if not yet snapped (tolerance 0.01 pixel)
-                if ((scrollInfo.metrics.pixels - offset).abs() > 0.01) {
-                  _animateSnapScroll(offset);
-                } else {
-                  _setSelectedItem();
-                  setState(() {});
-                }
-              }
-              return true;
-            },
-            child: InfiniteList(
-                controller: widget.controller,
-                direction: widget.direction,
-                scrollDirection: widget.scrollDirection,
-                posChildCount: _addFakeItems ? posChildCount + 1 : posChildCount,
-                negChildCount: _addFakeItems ? 1 : negChildCount ,
-                anchor: widget.anchor,
-                builder: (context, index) {
-                  // debugPrint('InfiniteList index: $index _selectedIndex: $_selectedIndex');
-                  bool isSelected = index == _calculateSelectedIndex() ? true : false;
-                  int itemIndex = _recalculateIndex(index);
-                  return InfiniteListItem(
-                    contentBuilder: (BuildContext context) {
-                      if (_addFakeItems && ((index >= posChildCount) || index < 0)) {
-                        if (index < 0) {
-                          return SizedBox(
-                            height: widget.scrollDirection == Axis.horizontal ? 1 : _negFakeItemSize,
-                            width: widget.scrollDirection == Axis.horizontal ? _negFakeItemSize : 1,
-                          );
-                        } else {
-                          return SizedBox(
-                            height: widget.scrollDirection == Axis.horizontal ? 1 : _posFakeItemSize,
-                            width: widget.scrollDirection == Axis.horizontal ? _posFakeItemSize : 1,
-                          );
-                        }
-                      } else {
-                        return widget.itemBuilder(context, itemIndex, isSelected);
-                      }
-
-                    },
-                  );
-                }
-            ),
-          );
-        }
-    );
+            //only animate if not yet snapped (tolerance 0.01 pixel)
+            if ((scrollInfo.metrics.pixels - offset).abs() > 0.01) {
+              _animateSnapScroll(offset);
+            } else {
+              _setSelectedItem();
+              setState(() {});
+            }
+          }
+          return true;
+        },
+        child: InfiniteList(
+            controller: widget.controller,
+            direction: widget.direction,
+            scrollDirection: widget.scrollDirection,
+            posChildCount: _addFakeItems ? posChildCount! + 1 : posChildCount,
+            negChildCount: _addFakeItems ? 1 : negChildCount,
+            anchor: widget.anchor,
+            builder: (context, index) {
+              // debugPrint('InfiniteList index: $index _selectedIndex: $_selectedIndex');
+              bool isSelected =
+                  index == _calculateSelectedIndex() ? true : false;
+              int itemIndex = _recalculateIndex(index);
+              return InfiniteListItem(
+                contentBuilder: (BuildContext context) {
+                  if (_addFakeItems &&
+                      ((index >= posChildCount!) || index < 0)) {
+                    if (index < 0) {
+                      return SizedBox(
+                        height: widget.scrollDirection == Axis.horizontal
+                            ? 1
+                            : _negFakeItemSize,
+                        width: widget.scrollDirection == Axis.horizontal
+                            ? _negFakeItemSize
+                            : 1,
+                      );
+                    } else {
+                      return SizedBox(
+                        height: widget.scrollDirection == Axis.horizontal
+                            ? 1
+                            : _posFakeItemSize,
+                        width: widget.scrollDirection == Axis.horizontal
+                            ? _posFakeItemSize
+                            : 1,
+                      );
+                    }
+                  } else {
+                    return widget.itemBuilder(context, itemIndex, isSelected);
+                  }
+                },
+              );
+            }),
+      );
+    });
   }
 
   @override
@@ -349,8 +355,7 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
     debugPrint('DISPOSE');
     // Clean up the controller when the widget is removed from the widget tree.
     // This also removes the _printLatestValue listener.
-    widget.controller.dispose();
+    widget.controller!.dispose();
     super.dispose();
   }
-
 }

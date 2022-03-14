@@ -1,8 +1,8 @@
 class Status {
-    String authType;
-    int code;
-    String message;
-    String ottSessionToken;
+    String? authType;
+    int? code;
+    String? message;
+    String? ottSessionToken;
 
     Status({this.authType, this.code, this.message, this.ottSessionToken});
 

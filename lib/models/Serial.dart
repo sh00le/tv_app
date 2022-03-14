@@ -3,20 +3,20 @@ import 'package:tv_app/models/Image.dart';
 import 'package:tv_app/models/Show.dart';
 
 class Serial {
-    String description;
-    String externalCode;
-    bool hasSeriesRecording;
-    String id;
-    String originalTitle;
-    String starRating;
-    String title;
-    int userBookmarkPercentage;
-    bool userFavorite;
-    bool userLocked;
-    bool userRecording;
-    List<Image> images;
-    Channel channel;
-    List<Show> episodes;
+    String? description;
+    String? externalCode;
+    bool? hasSeriesRecording;
+    String? id;
+    String? originalTitle;
+    String? starRating;
+    String? title;
+    int? userBookmarkPercentage;
+    bool? userFavorite;
+    bool? userLocked;
+    bool? userRecording;
+    List<Image>? images;
+    Channel? channel;
+    List<Show>? episodes;
 
     Serial({this.description, this.externalCode, this.hasSeriesRecording, this.id, this.originalTitle, this.starRating, this.title,
         this.userBookmarkPercentage, this.userFavorite, this.userLocked, this.userRecording,
@@ -41,10 +41,10 @@ class Serial {
         );
     }
 
-    Image variation(String variation, String type) {
-        Image outImage;
+    Image? variation(String variation, String type) {
+        Image? outImage;
 
-        this.images.forEach((image) {
+        this.images!.forEach((image) {
             if (image.imageType == type) {
                 if (image.variation == variation) {
                     outImage = image;
@@ -70,13 +70,13 @@ class Serial {
         data['userLocked'] = this.userLocked;
         data['userRecording'] = this.userRecording;
         if (this.images != null) {
-            data['images'] = this.images.map((v) => v.toJson()).toList();
+            data['images'] = this.images!.map((v) => v.toJson()).toList();
         }
         if (this.channel != null) {
-            data['channel'] = this.channel.toJson();
+            data['channel'] = this.channel!.toJson();
         }
         if (this.episodes != null) {
-            data['episodes'] = this.episodes.map((v) => v.toJson()).toList();
+            data['episodes'] = this.episodes!.map((v) => v.toJson()).toList();
         }
         return data;
     }

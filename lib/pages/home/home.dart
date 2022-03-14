@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tv_app/pages/home/home_controller.dart';
@@ -10,9 +7,7 @@ import 'package:tv_app/pages/home/recommendations.dart';
 import 'package:tv_app/widgets/content_info.dart';
 
 class Home extends StatefulWidget {
-  Home({Key key, this.title}) : super(key: key);
-
-  final String title;
+  Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -23,11 +18,11 @@ class _HomeState extends State<Home> {
   bool selectedSpec = false;
   var selectedContentItem;
 
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => afterFirstLayout(context));
+    WidgetsBinding.instance!
+        .addPostFrameCallback((_) => afterFirstLayout(context));
   }
 
   void afterFirstLayout(BuildContext context) {
@@ -58,22 +53,24 @@ class _HomeState extends State<Home> {
               builder: (_) => Container(
                   height: 165,
                   child: AnimatedOpacity(
-                      opacity: homeController.homeStatus.details.widgetStatus == Status.hidden ? 0.0 : 1.0,
+                      opacity: homeController.homeStatus.details.widgetStatus ==
+                              Status.hidden
+                          ? 0.0
+                          : 1.0,
                       duration: Duration(milliseconds: 400),
-                      child: ContentInfo(content: homeController.homeStatus.details.data)
-                  )
-              ),
+                      child: ContentInfo(
+                          content: homeController.homeStatus.details.data))),
             ),
           ),
           FocusScope(
-            node: homeController.homeStatus.recommendations.focusScopeNode,
-            child: Recommendations()),
+              node: homeController.homeStatus.recommendations.focusScopeNode,
+              child: Recommendations()),
           SizedBox(
             height: 10,
           ),
           FocusScope(
-            node: homeController.homeStatus.menu.focusScopeNode,
-            child: HomeMenu()),
+              node: homeController.homeStatus.menu.focusScopeNode,
+              child: HomeMenu()),
         ],
       ),
     );

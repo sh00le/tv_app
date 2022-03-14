@@ -1,12 +1,12 @@
 class Channel {
-    String chanGroup;
-    int chanNumber;
-    int channelId;
-    String title;
-    String logo;
-    bool hasCatchup;
-    bool ottChannel;
-    bool userSubscribed;
+    String? chanGroup;
+    int? chanNumber;
+    int? channelId;
+    String? title;
+    String? logo;
+    bool? hasCatchup;
+    bool? ottChannel;
+    bool? userSubscribed;
 
     Channel({this.chanGroup, this.chanNumber, this.channelId, this.hasCatchup, this.logo, this.ottChannel, this.title, this.userSubscribed});
 
