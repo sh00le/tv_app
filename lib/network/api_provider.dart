@@ -103,18 +103,14 @@ class ApiProvider {
       case 200:
         var responseJson = json.decode(body);
         return responseJson;
-        break;
       case 400:
         throw BadRequestException(body);
-        break;
       case 401:
       case 403:
         throw UnauthorisedException(body);
-        break;
       default:
         throw FetchDataException(
             'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
-        break;
     }
   }
 }

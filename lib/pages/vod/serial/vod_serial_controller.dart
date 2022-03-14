@@ -2,7 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:async';
 import 'package:get/get.dart';
-import 'package:tv_app/models/DefVodContent.dart';
+import 'package:tv_app/models/DefVodEpisode.dart';
 import 'package:tv_app/models/DefVodSeason.dart';
 import 'package:tv_app/models/DefVodSerial.dart';
 import 'package:tv_app/models/VodEpisode.dart';
@@ -14,7 +14,7 @@ enum Widgets { actions, content, seasons, episodes }
 class Season {
   FocusNode? focusNode;
   String? title;
-  List<VodEpisode>? episodes;
+  List<DefVodEpisode>? episodes;
 }
 
 class Action {
@@ -52,7 +52,7 @@ class EpisodeStatus {
   FocusScopeNode focusNode = FocusScopeNode();
   FocusAttachment? attachment;
   String get id => _id;
-  List<VodEpisode> data = [];
+  List<DefVodEpisode> data = [];
 }
 
 class SerialDetailsStatus {
@@ -256,7 +256,7 @@ class VodSerialDetailsPageController extends GetxController {
     serialStatus.season.seasons = seasons;
   }
 
-  void onEpisodeSelected(VodEpisode episode) {
+  void onEpisodeSelected(DefVodEpisode episode) {
     if (serialStatus.episode.focusNode.hasFocus) {
       serialStatus.content.data = episode;
       debugPrint('${episode.title}');

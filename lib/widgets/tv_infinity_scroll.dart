@@ -179,9 +179,7 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
     /// Check if fake items are needed
     /// Fake items are used so that all items could be scrolled to selectedItemIndex position
 
-    if (widget.itemCount != null &&
-        widget.selectedItemIndex != null &&
-        widget.loop != true) {
+    if (widget.selectedItemIndex != null && widget.loop != true) {
       _addFakeItems = true;
       posChildCount = widget.itemCount;
     }
@@ -235,7 +233,7 @@ class _TVInfiniteListViewState extends State<TVInfiniteListView> {
   int _recalculateIndex(int? index) {
     int outIndex = index!;
     if (widget.loop == true) {
-      if (widget.itemCount != null && widget.itemCount > 0) {
+      if (widget.itemCount > 0) {
         outIndex = index % widget.itemCount;
         if (outIndex < 0) {
           outIndex = widget.itemCount + outIndex;

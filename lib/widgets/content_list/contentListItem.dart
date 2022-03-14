@@ -36,7 +36,7 @@ class ContentListItem extends StatelessWidget {
   /// Detect content type widget
   Widget getContentWidget() {
     if (item is Show) {
-      return showListItem(item: item);
+      return ShowListItem(item: item);
     } else if (item is VodEpisode) {
       return VodListItem(item: item);
     } else if (item is VodMovie) {
