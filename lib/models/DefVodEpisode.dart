@@ -1,8 +1,8 @@
-import 'package:tv_app/models/DefVodEpisode.dart';
 import 'package:tv_app/models/Image.dart';
+import "package:tv_app/models/DefVodContent.dart";
 
-class SvodEpisode extends DefVodEpisode {
-  SvodEpisode(
+class DefVodEpisode extends DefVodContent {
+  DefVodEpisode(
       {String? actors,
       String? ageRating,
       int? buyDuration,
@@ -58,8 +58,8 @@ class SvodEpisode extends DefVodEpisode {
           year: year,
         );
 
-  factory SvodEpisode.fromJson(Map<String, dynamic> json) {
-    return SvodEpisode(
+  factory DefVodEpisode.fromJson(Map<String, dynamic> json) {
+    return DefVodEpisode(
       actors: json['actors'],
       ageRating: json['ageRating'],
       buyDuration: json['buyDuration'],

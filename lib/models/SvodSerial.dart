@@ -3,51 +3,51 @@ import 'package:tv_app/models/SvodSeason.dart';
 import 'package:tv_app/models/Image.dart';
 
 class SvodSerial extends DefVodSerial {
+  SvodSerial(
+      {String? id,
+      String? title,
+      String? originalTitle,
+      String? genre,
+      String? category,
+      String? externalCode,
+      String? description,
+      String? actors,
+      String? year,
+      String? director,
+      String? starRating,
+      int? licenceExpiration,
+      int? userBookmarkPercentage,
+      int? matchRating,
+      bool? userLocked,
+      bool? userFavorite,
+      bool? userOttPlayable,
+      bool? ottAvailable,
+      List<SvodSeason>? seasons,
+      Map<String, Image>? images})
+      : super(
+            id: id,
+            title: title,
+            originalTitle: originalTitle,
+            genre: genre,
+            category: category,
+            externalCode: externalCode,
+            description: description,
+            actors: actors,
+            year: year,
+            director: director,
+            starRating: starRating,
+            licenceExpiration: licenceExpiration,
+            userBookmarkPercentage: userBookmarkPercentage,
+            matchRating: matchRating,
+            userLocked: userLocked,
+            userFavorite: userFavorite,
+            userOttPlayable: userOttPlayable,
+            ottAvailable: ottAvailable,
+            seasons: seasons,
+            images: images);
 
-  SvodSerial({
-    String? id,
-    String? title,
-    String? originalTitle,
-    String? genre,
-    String? category,
-    String? externalCode,
-    String? description,
-    String? actors,
-    String? year,
-    String? director,
-    String? starRating,
-    int? licenceExpiration,
-    int? userBookmarkPercentage,
-    int? matchRating,
-    bool? userLocked,
-    bool? userFavorite,
-    bool? userOttPlayable,
-    bool? ottAvailable,
-    List<SvodSeason>? seasons,
-    Map<String, Image>? images}) : super(
-      id: id,
-      title: title,
-      originalTitle: originalTitle,
-      genre: genre,
-      category: category,
-      externalCode: externalCode,
-      description: description,
-      actors: actors,
-      year: year,
-      director: director,
-      starRating: starRating,
-      licenceExpiration: licenceExpiration,
-      userBookmarkPercentage: userBookmarkPercentage,
-      matchRating: matchRating,
-      userLocked: userLocked,
-      userFavorite: userFavorite,
-      userOttPlayable: userOttPlayable,
-      ottAvailable: ottAvailable,
-      seasons: seasons,
-      images: images
-  );
-
-  factory SvodSerial.fromJson(Map<String, dynamic> json, List<dynamic> seasonJson) {
+  factory SvodSerial.fromJson(
+      Map<String, dynamic> json, List<dynamic> seasonJson) {
     return SvodSerial(
       id: json['id'],
       title: json['title'],
@@ -63,15 +63,26 @@ class SvodSerial extends DefVodSerial {
       licenceExpiration: json['licenceExpiration'],
       userBookmarkPercentage: json['userBookmarkPercentage'],
       matchRating: json['matchRating'],
-      userLocked: (json['userLocked'] == 1 || json['userLocked'] == true) ? true : false,
-      userFavorite: (json['userFavorite'] == 1 || json['userFavorite'] == true) ? true : false,
-      userOttPlayable: (json['userOttPlayable'] == 1 || json['userOttPlayable'] == true) ? true : false,
-      ottAvailable: (json['ottAvailable'] == 1 || json['ottAvailable'] == true) ? true : false,
-      seasons: seasonJson!= null ? seasonJson.map((i) => SvodSeason.fromJson(i)).toList() : null,
+      userLocked: (json['userLocked'] == 1 || json['userLocked'] == true)
+          ? true
+          : false,
+      userFavorite: (json['userFavorite'] == 1 || json['userFavorite'] == true)
+          ? true
+          : false,
+      userOttPlayable:
+          (json['userOttPlayable'] == 1 || json['userOttPlayable'] == true)
+              ? true
+              : false,
+      ottAvailable: (json['ottAvailable'] == 1 || json['ottAvailable'] == true)
+          ? true
+          : false,
+      // ignore: unnecessary_null_comparison
+      seasons: seasonJson != null
+          ? seasonJson.map((i) => SvodSeason.fromJson(i)).toList()
+          : null,
       // images: json['images'] != null ? (json['images'] as List).map((i) => Image.fromJson(i)).toList() : null,
-      images: json['images'] != null ? Image.parseImageJson(json['images']) : null,
+      images:
+          json['images'] != null ? Image.parseImageJson(json['images']) : null,
     );
   }
-
-
 }

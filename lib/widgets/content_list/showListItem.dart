@@ -4,13 +4,13 @@ import 'package:tv_app/models/Show.dart';
 import 'package:tv_app/widgets/image_network/imageNetwork.dart';
 
 /// EPG content item with content image, channel logo and show title
-class showListItem extends StatefulWidget {
-  showListItem({Key? key, required this.item}) : super(key: key);
+class ShowListItem extends StatefulWidget {
+  ShowListItem({Key? key, required this.item}) : super(key: key);
 
   final Show item;
 
   @override
-  _showListItemState createState() => _showListItemState();
+  _ShowListItemState createState() => _ShowListItemState();
 }
 
 TextStyle textStyle = TextStyle(
@@ -19,7 +19,7 @@ TextStyle textStyle = TextStyle(
 );
 
 /// EPG content State
-class _showListItemState extends State<showListItem> {
+class _ShowListItemState extends State<ShowListItem> {
   @override
   void initState() {
     super.initState();

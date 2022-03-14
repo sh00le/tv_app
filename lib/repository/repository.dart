@@ -6,17 +6,16 @@ import 'package:tv_app/models/Serial.dart';
 import 'package:tv_app/models/VodMovie.dart';
 import 'package:tv_app/models/VodSerial.dart';
 import 'package:tv_app/models/VodEpisode.dart';
-import 'package:tv_app/models/SvodMovie.dart';
 import 'package:tv_app/models/SvodSerial.dart';
 import 'package:tv_app/models/SvodEpisode.dart';
 
 class Repository {
-
   @protected
   ApiProvider provider = ApiProvider();
 
   @protected
-  Show showFromJson(Map<String, dynamic> epgJson, Map<String, dynamic> channelJson) {
+  Show showFromJson(
+      Map<String, dynamic> epgJson, Map<String, dynamic> channelJson) {
     epgJson['channel'] = channelJson;
     return Show.fromJson(epgJson);
   }
@@ -25,9 +24,10 @@ class Repository {
   Channel channelFromJson(Map<String, dynamic> channelJson) {
     return Channel.fromJson(channelJson);
   }
-  
+
   @protected
-  Serial serialFromJson(Map<String, dynamic> serialJson, Map<String, dynamic> channelJson, List<dynamic> episodesJson) {
+  Serial serialFromJson(Map<String, dynamic> serialJson,
+      Map<String, dynamic> channelJson, List<dynamic> episodesJson) {
     serialJson['channel'] = channelJson;
     serialJson['episodes'] = episodesJson;
     return Serial.fromJson(serialJson);
@@ -87,15 +87,17 @@ class Repository {
         return _svodMovieFromJson(svodJson);
       }
     }
-  }  
+  }
 
   @protected
-  VodSerial vodSerialFromJson(Map<String, dynamic> serialJson, List<dynamic> seasonJson) {
+  VodSerial vodSerialFromJson(
+      Map<String, dynamic> serialJson, List<dynamic> seasonJson) {
     return VodSerial.fromJson(serialJson, seasonJson);
   }
 
   @protected
-  SvodSerial svodSerialFromJson(Map<String, dynamic> serialJson, List<dynamic> seasonJson) {
+  SvodSerial svodSerialFromJson(
+      Map<String, dynamic> serialJson, List<dynamic> seasonJson) {
     return SvodSerial.fromJson(serialJson, seasonJson);
   }
 
@@ -110,10 +112,8 @@ class Repository {
   SvodEpisode _svodMovieFromJson(Map<String, dynamic> svodJson) {
     return SvodEpisode.fromJson(svodJson);
   }
-  
+
   SvodEpisode _svodEpisodeFromJson(Map<String, dynamic> svodJson) {
     return SvodEpisode.fromJson(svodJson);
   }
-
-
 }

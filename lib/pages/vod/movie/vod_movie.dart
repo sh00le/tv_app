@@ -59,9 +59,19 @@ class VodMovieDetailsPage extends StatelessWidget {
                                     itemCount: _.movieDetailsStatus.action
                                         .actions.length,
                                     itemBuilder: (context, index) {
-                                      return FlatButton(
+                                      return TextButton(
                                         autofocus: index == 0 ? true : false,
-                                        focusColor: _style.actionFocusedColor,
+                                        //focusColor: _style.actionFocusedColor,
+                                        style: ButtonStyle(
+                                          overlayColor: MaterialStateProperty
+                                              .resolveWith<Color?>(
+                                                  (Set<MaterialState> states) {
+                                            if (states.contains(
+                                                MaterialState.focused))
+                                              return _style.actionFocusedColor;
+                                            return null;
+                                          }),
+                                        ),
                                         onPressed: () {
                                           debugPrint(
                                               'pressed ${_.movieDetailsStatus.action.actions[index].title!}');
